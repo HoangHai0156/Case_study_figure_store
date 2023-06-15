@@ -1,6 +1,7 @@
 package com.example.case_study_md3.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Order {
     private int id;
@@ -9,6 +10,8 @@ public class Order {
     private boolean isPaid;
     private float subTotal;
     private float discount;
+    private List<OrderItem> orderItems;
+
 
     public Order() {
     }
