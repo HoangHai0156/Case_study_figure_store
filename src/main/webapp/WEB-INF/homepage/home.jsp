@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Coron-shop</title>
+    <title>Figure-shop</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <jsp:include page="/WEB-INF/homepage/layout/css_header.jsp"/>
@@ -217,22 +217,22 @@
                                             <div class="col-lg-4 col-md-6">
                                                 <div class="single_product">
                                                     <div class="product_thumb">
-                                                        <a href="single-product.html"><img src="${p.getImgLink()}" alt=""></a>
+                                                        <a href="/product?action=view&id=${p.getId()}"><img src="${p.getImgLink()}" alt=""></a>
 <%--                                                        <div class="img_icone">--%>
 <%--                                                            <img src="/homepage_frontend/assets\img\cart\span-new.png" alt="">--%>
 <%--                                                        </div>--%>
                                                         <div class="product_action">
-                                                            <a href="#"> <i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                                            <a href="/cart?action=add&id=${p.getId()}"> <i class="fa fa-shopping-cart"></i> Add to cart</a>
                                                         </div>
                                                     </div>
                                                     <div class="product_content">
                                                         <span class="product_price">$${p.getPrice()}</span>
-                                                        <h3 class="product_title"><a href="single-product.html">${p.getName()}</a></h3>
+                                                        <h3 class="product_title"><a href="/product?action=view&id=${p.getId()}">${p.getName()}</a></h3>
                                                     </div>
                                                     <div class="product_info">
                                                         <ul>
 <%--                                                            <li><a href="#" title=" Add to Wishlist ">Add to Wishlist</a></li>--%>
-                                                            <li><a href="#" data-toggle="modal" data-target="#modal_box" title="Quick view">View Detail</a></li>
+                                                            <li><a href="/product?action=view&id=${p.getId()}" data-toggle="modal" data-target="#modal_box" title="Quick view">View Detail</a></li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -246,7 +246,7 @@
                                             <div class="row align-items-center mb-2">
                                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                                     <div class="product_thumb">
-                                                        <a href="single-product.html"><img src="${p.getImgLink()}" alt=""></a>
+                                                        <a href="/product?action=view&id=${p.getId()}"><img src="${p.getImgLink()}" alt=""></a>
 <%--                                                        <div class="hot_img">--%>
 <%--                                                            <img src="/homepage_frontend/assets\img\cart\span-hot.png" alt="">--%>
 <%--                                                        </div>--%>
@@ -264,21 +264,17 @@
                                                             </ul>
                                                         </div>
                                                         <div class="list_title">
-                                                            <h3><a href="single-product.html">${p.getName()}</a></h3>
+                                                            <h3><a href="/product?action=view&id=${p.getId()}">${p.getName()}</a></h3>
                                                         </div>
                                                         <p class="design">${p.getDescription()}</p>
 
-                                                        <p class="compare">
-                                                            <input id="select" type="checkbox">
-                                                            <label for="select">Select to compare</label>
-                                                        </p>
                                                         <div class="content_price">
                                                             <span>$${p.getPrice()}</span>
                                                             <span class="old-price">$${p.getPrice() + 20}</span>
                                                         </div>
                                                         <div class="add_links">
                                                             <ul>
-                                                                <li><a href="#" title="add to cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li>
+                                                                <li><a href="/cart?action=add&id=${p.getId()}" title="add to cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li>
                                                             </ul>
                                                         </div>
                                                     </div>
