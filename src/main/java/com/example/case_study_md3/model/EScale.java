@@ -25,4 +25,13 @@ public enum EScale {
     public void setScale(String scale) {
         this.scale = scale;
     }
+    public static EScale getScaleByScale(String scale){
+        for (EScale eScale: EScale.values()
+        ) {
+            if (eScale.getScale().equals(scale)){
+                return eScale;
+            }
+        }
+        return null;
+    }
 }

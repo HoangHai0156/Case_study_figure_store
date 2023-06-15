@@ -25,4 +25,12 @@ public enum EStudio {
     public void setName(String name) {
         this.name = name;
     }
+    public static EStudio getStudio(String name){
+        for (EStudio eStudio : EStudio.values()){
+            if (eStudio.getName().equals(name)){
+                return eStudio;
+            }
+        }
+        return null;
+    }
 }
