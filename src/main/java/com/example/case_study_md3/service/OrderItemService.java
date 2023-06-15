@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderItemService  { //extends DBContext
-    protected String jdbcURL = "jdbc:mysql://localhost:3306/duan_banhang?allowPublicKeyRetrieval=true&useSSL=false";
+    protected String jdbcURL = "jdbc:mysql://localhost:3306/figure_store?allowPublicKeyRetrieval=true&useSSL=false";
     protected String jdbcUsername = "root";
-    protected String jdbcPassword = "Raisingthebar123";
+    protected String jdbcPassword = "Raisingthebar123@";
 
     protected Connection getConnection() {
         Connection connection = null;
@@ -103,7 +103,7 @@ public class OrderItemService  { //extends DBContext
             ps.setInt(4, id);
             ps.executeUpdate();
 
-            System.out.println("update orderItem " + ps);
+            System.out.println("Update orderItem " + ps);
             ps.executeUpdate();
 
             connection.close();
@@ -117,7 +117,7 @@ public class OrderItemService  { //extends DBContext
             PreparedStatement ps = connection.prepareStatement(DELETE_ORDERITEM);
 
             ps.setLong(1, id);
-            System.out.println("delete orderItem" + ps);
+            System.out.println("Remove orderItem" + ps);
             ps.executeUpdate();
             connection.close();
 

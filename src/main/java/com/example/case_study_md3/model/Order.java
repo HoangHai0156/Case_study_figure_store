@@ -7,7 +7,7 @@ public class Order {
     private int id;
     private Date createAt;
     private int idUser;
-    private boolean isPaid;
+    private boolean isPaid = false;
     private float subTotal;
     private float discount;
     private List<OrderItem> orderItems;
@@ -16,7 +16,17 @@ public class Order {
     public Order() {
     }
 
-    public Order(int id, Date createAt, int idUser, boolean isPaid, float subTotal, float discount) {
+    public Order(int id, Date createAt, int idUser, float subTotal, float discount, List<OrderItem> orderItems) {
+        this.id = id;
+        this.createAt = createAt;
+        this.idUser = idUser;
+        this.isPaid = isPaid;
+        this.subTotal = subTotal;
+        this.discount = discount;
+        this.orderItems = orderItems;
+    }
+
+    public Order(int id, Date createAt, int idUser,  boolean isPaid, float subTotal, float discount) {
         this.id = id;
         this.createAt = createAt;
         this.idUser = idUser;
@@ -25,12 +35,19 @@ public class Order {
         this.discount = discount;
     }
 
-    public Order(Date createAt, int idUser, boolean isPaid, float subTotal, float discount) {
+    public Order(Date createAt, int idUser,  float subTotal, float discount) {
         this.createAt = createAt;
         this.idUser = idUser;
-        this.isPaid = isPaid;
         this.subTotal = subTotal;
         this.discount = discount;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 
     public int getId() {
