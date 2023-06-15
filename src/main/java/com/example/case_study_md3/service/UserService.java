@@ -61,9 +61,6 @@ public class UserService extends DBContext {
         return null;
     }
 
-    public void signup( String email, String password) {
-
-    }
     public List<User> findAll(){
        List<User> users = new ArrayList<>();
         try {
@@ -110,7 +107,7 @@ public class UserService extends DBContext {
         }
         return null;
     }
-    public void signup (User user){
+    public void save(User user){
         try {
             connection = getConnection();
             ps = connection.prepareStatement(INSERT_USER);
@@ -126,14 +123,22 @@ public class UserService extends DBContext {
 
     private static void setUserFromPs(User user, PreparedStatement ps) throws SQLException {
         ps.setString(1, user.getName());
-        ps.setDate(2, new java.sql.Date(user.getDob().getTime()));
+        if (user.getDob() == null) {
+            ps.setDate(2, null);
+        } else {
+            ps.setDate(2, new java.sql.Date(user.getDob().getTime()));
+        }
         ps.setString(3, user.getAddress());
         ps.setString(4, user.getPhone());
         ps.setString(5, user.getEmail());
         ps.setString(6, user.getPassword());
         ps.setDate(7, new java.sql.Date(user.getCreateAt().getTime()));
         ps.setString(8, user.geteRole().name());
-        ps.setDate(9, new java.sql.Date(user.getDeleteAt().getTime()));
+        if (user.getDeleteAt() == null) {
+            ps.setDate(9, null);
+        } else {
+            ps.setDate(9, new java.sql.Date(user.getDeleteAt().getTime()));
+        }
     }
 
     public void update (int id, User user){

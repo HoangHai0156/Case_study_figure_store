@@ -28,7 +28,7 @@
             <li><a href="wishlist.html" title="wishlist">My wishlist</a></li>
             <li><a href="my-account.html" title="My account">My account</a></li>
             <li><a href="cart.html" title="My cart">My cart</a></li>
-            <li><a href="login.html" title="Login">Login</a></li>
+            <li><a href="/user?action=login" title="Login">Login</a></li>
           </ul>
         </div>
       </div>
