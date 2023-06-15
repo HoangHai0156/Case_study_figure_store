@@ -55,50 +55,57 @@
                                         <tr>
                                             <th class="product_remove">Delete</th>
                                             <th class="product_thumb">Image</th>
-                                            <th class="product_name">Product</th>
+                                            <th class="product_name">Name</th>
                                             <th class="product-price">Price</th>
                                             <th class="product_quantity">Quantity</th>
                                             <th class="product_total">Total</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a></td>
-                                            <td class="product_thumb"><a href="#"><img src="assets\img\cart\cart17.jpg" alt=""></a></td>
-                                            <td class="product_name"><a href="#">Handbag fringilla</a></td>
-                                            <td class="product-price">£65.00</td>
-                                            <td class="product_quantity"><input min="0" max="100" value="1" type="number"></td>
-                                            <td class="product_total">£130.00</td>
+                                        <c:forEach items="${order.getOrderItems()}" var="oT">
+                                            <c:forEach items="${products}" var="p">
+                                                <c:if test="${oT.getIdProduct() == p.getID()}">
+                                                    <tr>
+                                                        <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a></td>
+                                                        <td class="product_thumb"><a href="#"><img src="${p.getImgLink()}" alt=""></a></td>
+                                                        <td class="product_name"><a href="#">${p.getName()}</a></td>
+                                                        <td class="product-price">${p.getPrice()}</td>
+                                                        <td class="product_quantity"><input min="1" max="100" value="1" type="number">${oT.getQuantity()}</td>
+                                                        <td class="product_total">${p.getPrice() * oT.getQuantity()}.00</td>
 
 
-                                        </tr>
-
-                                        <tr>
-                                            <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a></td>
-                                            <td class="product_thumb"><a href="#"><img src="assets\img\cart\cart18.jpg" alt=""></a></td>
-                                            <td class="product_name"><a href="#">Handbags justo</a></td>
-                                            <td class="product-price">£90.00</td>
-                                            <td class="product_quantity"><input min="0" max="100" value="1" type="number"></td>
-                                            <td class="product_total">£180.00</td>
-
-
-                                        </tr>
-                                        <tr>
-                                            <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a></td>
-                                            <td class="product_thumb"><a href="#"><img src="assets\img\cart\cart19.jpg" alt=""></a></td>
-                                            <td class="product_name"><a href="#">Handbag elit</a></td>
-                                            <td class="product-price">£80.00</td>
-                                            <td class="product_quantity"><input min="0" max="100" value="1" type="number"></td>
-                                            <td class="product_total">£160.00</td>
+                                                    </tr>
+                                                </c:if>
+                                            </c:forEach>
+                                        </c:forEach>
+                                        <%--
+                                               <tr>
+                                                   <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a></td>
+                                                   <td class="product_thumb"><a href="#"><img src="assets\img\cart\cart18.jpg" alt=""></a></td>
+                                                   <td class="product_name"><a href="#">Handbags justo</a></td>
+                                                   <td class="product-price">£90.00</td>
+                                                   <td class="product_quantity"><input min="0" max="100" value="1" type="number"></td>
+                                                   <td class="product_total">£180.00</td>
 
 
-                                        </tr>
+                                               </tr>
+                                               <tr>
+                                                   <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a></td>
+                                                   <td class="product_thumb"><a href="#"><img src="assets\img\cart\cart19.jpg" alt=""></a></td>
+                                                   <td class="product_name"><a href="#">Handbag elit</a></td>
+                                                   <td class="product-price">£80.00</td>
+                                                   <td class="product_quantity"><input min="0" max="100" value="1" type="number"></td>
+                                                   <td class="product_total">£160.00</td>
+
+
+                                               </tr>
+                                             --%>
 
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="cart_submit">
-                                    <button type="submit">update cart</button>
+                                    <button type="submit">Update cart</button>
                                 </div>
                             </div>
                         </div>
@@ -122,17 +129,21 @@
                                     <div class="coupon_inner">
                                         <div class="cart_subtotal">
                                             <p>Subtotal</p>
-                                            <p class="cart_amount">£215.00</p>
+                                            <p class="cart_amount">${order.getSubTotal()}</p>
+                                        </div>
+                                        <div class="cart_subtotal ">
+                                            <p>Discount</p>
+                                            <p class="cart_amount"><span>Discount</span> ${order.getDiscount()}%</p>
                                         </div>
                                         <div class="cart_subtotal ">
                                             <p>Shipping</p>
-                                            <p class="cart_amount"><span>Flat Rate:</span> £255.00</p>
+                                            <p class="cart_amount"><span>Ship:</span> 10</p>
                                         </div>
                                         <a href="#">Calculate shipping</a>
 
                                         <div class="cart_subtotal">
                                             <p>Total</p>
-                                            <p class="cart_amount">£215.00</p>
+                                            <p class="cart_amount">${order.getSubTotal() - order.getDiscount() * order.getSubTotal() + 10}</p>
                                         </div>
                                         <div class="checkout_btn">
                                             <a href="#">Proceed to Checkout</a>
