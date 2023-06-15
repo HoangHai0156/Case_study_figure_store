@@ -32,19 +32,23 @@ public class UserServlet extends HttpServlet {
 //                showDeleteUser(req, resp);
                 break;
             case "view":
-//                showDetailsUser(req, resp);
+                showDetailsUser(req, resp);
             default:
 //                showListUser(req,resp);
                 break;
         }
     }
 
+    private void showDetailsUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/WEB-INF/homepage/user-account.jsp").forward(req, resp);
+    }
+
     private void showSignup(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/create-user.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/admin/user/create-user.jsp").forward(req, resp);
     }
 
     private void showLogin(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/signIn.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/homepage/signIn.jsp").forward(req, resp);
     }
 
 

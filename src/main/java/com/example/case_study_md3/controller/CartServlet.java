@@ -17,7 +17,7 @@ public class CartServlet extends HttpServlet {
         productService = new ProductService();
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String action = request.getParameter("action");
         if (action == null) {
             action = "";
@@ -26,9 +26,14 @@ public class CartServlet extends HttpServlet {
             case "add":
                 addToCart(request, response);
                 break;
-//            default:
-//                showCart(request, response);
+            default:
+                showCart(request, response);
+                break;
         }
+    }
+
+    private void showCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("/WEB-INF/homepage/cart.jsp").forward(request,response);
     }
 
     private void addToCart(HttpServletRequest request, HttpServletResponse response) {

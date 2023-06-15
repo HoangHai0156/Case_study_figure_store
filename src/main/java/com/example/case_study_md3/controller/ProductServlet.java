@@ -10,7 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-@WebServlet(name = "ProductServlet", value = "/product")
+//@WebServlet(name = "ProductServlet", value = {"/product" , "/"})
 public class ProductServlet extends HttpServlet {
     private ProductService productService = new ProductService();
     private CategoryService categoryService = new CategoryService();
@@ -31,6 +31,7 @@ public class ProductServlet extends HttpServlet {
 
                 break;
             default:
+                req.getRequestDispatcher("/WEB-INF/homepage/home.jsp").forward(req,resp);
                 break;
         }
     }

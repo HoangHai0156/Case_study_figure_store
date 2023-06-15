@@ -3,7 +3,6 @@ package com.example.case_study_md3.service;
 import com.example.case_study_md3.model.Order;
 import com.example.case_study_md3.model.User;
 import com.example.case_study_md3.utils.DBContext;
-import com.sun.org.apache.xpath.internal.operations.Or;
 
 import java.sql.*;
 import java.util.ArrayList;
