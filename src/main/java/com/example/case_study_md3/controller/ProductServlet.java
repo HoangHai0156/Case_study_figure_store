@@ -1,10 +1,12 @@
 package com.example.case_study_md3.controller;
 
 import com.example.case_study_md3.model.Category;
+import com.example.case_study_md3.model.Product;
 import com.example.case_study_md3.service.CategoryService;
 import com.example.case_study_md3.service.ProductService;
 
 import java.io.*;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -21,7 +23,10 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-       Map<Integer, Category> categoryMap = categoryService.getCategoryMap();
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        Map<Integer, Category> categoryMap = categoryService.getCategoryMap();
+        List<Product> products = productService.findAll();
         String action = req.getParameter("action");
         if (action == null){
             action = "";
@@ -31,6 +36,8 @@ public class ProductServlet extends HttpServlet {
 
                 break;
             default:
+                req.setAttribute("products",products);
+                req.setAttribute("categoryMap",categoryMap);
                 req.getRequestDispatcher("/WEB-INF/homepage/home.jsp").forward(req,resp);
                 break;
         }
@@ -38,7 +45,8 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
         Map<Integer, Category> categoryMap = categoryService.getCategoryMap();
         String action = req.getParameter("action");
         if (action == null){

@@ -1,44 +1,13 @@
 package com.example.case_study_md3.service;
 
 import com.example.case_study_md3.model.Category;
+import com.example.case_study_md3.utils.DBContext;
 
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 
-public class CategoryService {
-    protected String jdbcURL = "jdbc:mysql://localhost:3306/figure_store?useSSL=false";
-    protected String jdbcUsername = "root";
-    protected String jdbcPassword = "Raisingthebar123@";
-    protected Connection getConnection() {
-        Connection connection = null;
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return connection;
-    }
-    protected void printSQLException(SQLException ex) {
-        for (Throwable e : ex) {
-            if (e instanceof SQLException) {
-                e.printStackTrace(System.err);
-                System.err.println("SQLState: " + ((SQLException) e).getSQLState());
-                System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
-                System.err.println("Message: " + e.getMessage());
-                Throwable t = ex.getCause();
-                while (t != null) {
-                    System.out.println("Cause: " + t);
-                    t = t.getCause();
-                }
-            }
-        }
-    }
+public class CategoryService extends DBContext {
     private final String SELECT_ALL = "SELECT * FROM categories where `deleteAt` is null";
     private final String SELECT_BY_ID = "SELECT * FROM categories where `id` = ? and `deleteAt` is null";
     private final String INSERT_CATEGORY = "INSERT INTO `categories` (`name`) VALUES (?)";
