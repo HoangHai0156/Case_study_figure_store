@@ -1,3 +1,5 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <div class="header_area">
   <!--header top-->
   <div class="header_top">
@@ -26,9 +28,15 @@
           <ul>
             <li><a href="contact.html" title="Contact">Contact</a></li>
             <li><a href="wishlist.html" title="wishlist">My wishlist</a></li>
-            <li><a href="my-account.html" title="My account">My account</a></li>
+            <li><a href="/user?action=myAccount" title="My account">My account</a></li>
             <li><a href="cart.html" title="My cart">My cart</a></li>
-            <li><a href="/user?action=login" title="Login">Login</a></li>
+            <c:if test="${sessionScope.user == null}">
+              <li><a href="/user?action=login" title="Login">Login</a></li>
+            </c:if>
+            <c:if test="${sessionScope.user != null}">
+              <li><a href="/user?action=logout" title="Logout">Logout</a></li>
+              <li class="font-weight-bold">Hello: ${sessionScope.user.email}</li>
+            </c:if>
           </ul>
         </div>
       </div>

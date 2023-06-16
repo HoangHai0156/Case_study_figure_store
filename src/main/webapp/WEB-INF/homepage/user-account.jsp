@@ -175,8 +175,11 @@
                                                                         <input type="checkbox" value="1" name="newsletter">
                                                                         <label>Sign up for our newsletter<br><em>You may unsubscribe at any moment. For that purpose, please find our contact info in the legal notice.</em></label>
                                                                     </span>
-                                                    <div class="save_button primary_btn default_button">
-                                                        <a href="#">Save</a>
+<%--                                                    <div class="save_button primary_btn default_button">--%>
+<%--                                                        <a href="#">Save</a>--%>
+<%--                                                    </div>--%>
+                                                    <div class="col-3">
+                                                        <button class="btn btn-md btn-block btn-primary waves-effect waves-light" type="submit">Save</button>
                                                     </div>
                                                 </form>
                                             </div>

@@ -29,6 +29,11 @@ public class UserServlet extends HttpServlet {
             case "signup":
                 showSignup(req, resp);
                 break;
+            case "logout":
+                showLogout(req, resp);
+                break;
+            case "myAccount":
+                showMyAccount(req, resp);
             case "delete":
 //                showDeleteUser(req, resp);
                 break;
@@ -37,6 +42,16 @@ public class UserServlet extends HttpServlet {
             default:
 //                showListUser(req,resp);
                 break;
+        }
+    }
+
+    private void showMyAccount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            req.getRequestDispatcher("/WEB-INF/homepage/user-account.jsp").forward(req, resp);
+        } else {
+            req.getRequestDispatcher("/WEB-INF/homepage/signIn.jsp").forward(req, resp);
         }
     }
 
@@ -52,9 +67,16 @@ public class UserServlet extends HttpServlet {
                 break;
             case "signup":
                 signup(req, resp);
+                break;
             default:
                 break;
         }
+    }
+
+    private void showLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        HttpSession session = req.getSession();
+        session.removeAttribute("user");
+        resp.sendRedirect("/product");
     }
 
     private void signup(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
