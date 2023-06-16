@@ -85,6 +85,7 @@
                                             <c:forEach var="o" items="${requestScope.orders}">
                                                 <tr>
                                                     <td>1</td>
+
                                                     <td><fmt:formatDate value="${o.getCreateAt()}" pattern="yyyy-MM-dd"/></td>
                                                     <td><span class="success">
                                                         <c:choose>
