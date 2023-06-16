@@ -57,6 +57,8 @@ public class ProductServlet extends HttpServlet {
                 req.setAttribute("categoryMap",categoryMap);
                 req.getRequestDispatcher("/WEB-INF/admin/product/view-product.jsp").forward(req,resp);
                 break;
+
+
             default:
                 List<Product> specials = productService.findSpecial();
 

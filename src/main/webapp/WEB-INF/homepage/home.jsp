@@ -49,8 +49,11 @@
                         <div class="d-flex align-items-start flex-column">
                             <div class="sidebar_widget shop_c">
                                 <h4>Categories</h4>
-                                <form action="#">
+                                <form action="/product?action=search" method="get">
+<%--                                    sortfield, order, kw, category--%>
                                     <select name="category" id="cate">
+<%--                                        onchane--%>
+<%--                                        onchange="handleCategoryChange('name', '${pageable.getOrder()}', '${pageable.getKw()}', ${pageable.idCategory()} )"--%>
                                         <option value="-1">All</option>
                                         <c:forEach var="c" items="${categoryMap.keySet()}">
                                             <option
@@ -268,7 +271,7 @@
                                     <ul>
                                         <c:if test="${pageable.getPage() > 1}">
                                             <li class="page-item">
-                                                <a class="page-link" href="/product?kw=${pageable.getKw()}&category=${pageable.getIdCategory()}&scale=${pageable.getScale()}&page=${pageable.getPage() - 1}">
+                                                <a class="page-link" href="/product?kw=${pageable.getKw()}&category=${pageable.getIdCategory()}&page=${pageable.getPage() - 1}">
                                                     <span aria-hidden="true">&laquo;</span>
                                                 </a>
                                             </li>
@@ -327,5 +330,11 @@
 
 <!-- all js here -->
 <jsp:include page="/WEB-INF/homepage/layout/js_footer.jsp"/>
+<script>
+    function handleCategoryChange(sortfield, order, kw, idCategory) {
+        //http://localhost:8080/product?sortfield=name&order=asc&kw=silve&category=-1&page=1
+        window.location.href = "/product?sortfield=" + sortfield + "&order=" + order + "&kw=" + kw + "&category=" + idCategory;
+    }
+</script>
 </body>
 </html>

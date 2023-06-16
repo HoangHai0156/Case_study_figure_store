@@ -63,9 +63,10 @@ public class ProductService extends DBContext {
             "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.`deleteAt` is null \n";
     private final String SELECT_ALL_PRODUCT_FILTER_BY_CATEGORY = "select p.*,c.`name` as categoryName from products p \n" +
             "join categories c on p.idCategory = c.id \n" +
-            "where (p.`name` like ? or p.price like ?  or p.`description` like ? or p.studio like ?) and (p.idCategory = ? and p.scale = ? and p.`deleteAt` is null) \n" +
+            "where (p.`name` like ? or p.price like ?  or p.`description` like ? or p.studio like ?) and (p.idCategory = ?  and p.`deleteAt` is null) \n" +
             "order by %s %s \n" +
             "limit ?, ?;";
+    //and p.scale = ?
     private final String SELECT_ALL_PRODUCT_FILTER_BY_CATEGORY_COUNT_TOTAL = "select p.*,c.`name` as categoryName from products p \n" +
             "join categories c on p.idCategory = c.id \n" +
             "where (p.`name` like ? or p.price like ?  or p.`description` like ? or p.studio like ?) and (p.idCategory = ? and p.scale = ? and p.`deleteAt` is null) \n";
@@ -136,9 +137,9 @@ public class ProductService extends DBContext {
         ps.setString(3, "%" + pageable.getKw() + "%");
         ps.setString(4, "%" + pageable.getKw() + "%");
         ps.setInt(5, pageable.getIdCategory());
-        ps.setString(6, "%" + pageable.getScale() + "%");
-        ps.setInt(7, (pageable.getPage() - 1) * pageable.getLimit());
-        ps.setInt(8, pageable.getLimit());
+//        ps.setString(6, "%" + pageable.getScale() + "%");
+        ps.setInt(6, (pageable.getPage() - 1) * pageable.getLimit());
+        ps.setInt(7, pageable.getLimit());
         System.out.println("Funtion find advance " + ps);
 
         ResultSet rs = ps.executeQuery();
