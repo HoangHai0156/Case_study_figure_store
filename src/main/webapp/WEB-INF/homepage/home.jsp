@@ -50,10 +50,12 @@
                             <div class="sidebar_widget shop_c">
                                 <h4>Categories</h4>
                                 <form action="#">
-                                    <select name="idCategory" id="cate">
+                                    <select name="category" id="cate">
                                         <option value="-1">All</option>
                                         <c:forEach var="c" items="${categoryMap.keySet()}">
-                                            <option value="${c}">${categoryMap.get(c).getName()}</option>
+                                            <option
+                                                    <c:if test="${c == requestScope.pageable.getIdCategory()}">selected</c:if>
+                                                    value="${c}">${categoryMap.get(c).getName()}</option>
                                         </c:forEach>
                                     </select>
                                 </form>
@@ -62,9 +64,11 @@
                                 <h4>Scale</h4>
                                 <form action="#">
                                     <select name="scale" id="scale">
-                                        <option value="-1">All</option>
+                                        <option value="all">All</option>
                                         <c:forEach var="sc" items="${scales}">
-                                            <option value="${sc.getId()}">${sc.getScale()}</option>
+                                            <option
+                                                    <c:if test="${sc.equals(requestScope.pageable.getScale())}">selected</c:if>
+                                                    value="${sc.getScale()}">${sc.getScale()}</option>
                                         </c:forEach>
                                     </select>
                                 </form>
@@ -260,21 +264,41 @@
                             </div>
                             <div class="page_number">
                                 <span>Pages: </span>
-                                <nav aria-label="Page navigation example">
+                                <nav aria-label="Page navigation example ">
                                     <ul>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Previous">
-                                                <span aria-hidden="true">&laquo;</span>
-                                            </a>
-                                        </li>
-                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Next">
-                                                <span aria-hidden="true">&raquo;</span>
-                                            </a>
-                                        </li>
+                                        <c:if test="${pageable.getPage() > 1}">
+                                            <li class="page-item">
+                                                <a class="page-link" href="/product?kw=${pageable.getKw()}&category=${pageable.getIdCategory()}&scale=${pageable.getScale()}&page=${pageable.getPage() - 1}">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                        </c:if>
+                                        <c:forEach begin="1" end="${pageable.getTotalPage()}" var="page">
+                                            <c:choose>
+                                                <c:when test="${page == pageable.getPage()}">
+                                                    <li class="page-item active">
+                                                        <a class="page-link" href="#">${page}</a>
+                                                    </li>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="product?kw=${pageable.getKw()}&category=${pageable.getIdCategory()}&page=${page}">${page}</a>
+                                                    </li>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:forEach>
+
+<%--                                        <li class="page-item"><a class="page-link" href="#">1</a></li>--%>
+<%--                                        <li class="page-item"><a class="page-link" href="#">2</a></li>--%>
+<%--                                        <li class="page-item"><a class="page-link" href="#">3</a></li>--%>
+
+                                        <c:if test="${pageable.getPage() > pageable.getTotalPage()}">
+                                            <li class="page-item">
+                                                <a class="page-link" href="/product?kw=${pageable.getKw()}&category=${pageable.getIdCategory()}&page=${pageable.getPage() + 1}">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </c:if>
                                     </ul>
                                 </nav>
                             </div>

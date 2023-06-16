@@ -96,8 +96,8 @@ public class CartServlet extends HttpServlet {
         }
 
         Order order = null;
-        if (request.getSession().getAttribute("cart") != null) {
-            order = (Order) request.getSession().getAttribute("cart");
+        if (request.getSession().getAttribute("order") != null) {
+            order = (Order) request.getSession().getAttribute("order");
         } else {
             order = new Order();
         }
@@ -111,7 +111,7 @@ public class CartServlet extends HttpServlet {
         } else {
             boolean check = checkIdProductExistOrder(idProduct, order);
             if (check) {
-                updateProductInOrder(idProduct, quantity, order);
+                updateProductInOrder(idProduct, quantity + 1, order);
             } else {
                 addProductToOrder(idProduct, quantity, order);
             }

@@ -57,8 +57,8 @@
       <div class="col-lg-9 col-md-9">
         <div class="header_right_info">
           <div class="search_bar">
-            <form action="#">
-              <input placeholder="Search..." type="text">
+            <form action="/product?action=search" method="=get">
+              <input placeholder="Search..." type="text" name="kw" value="${requestScope.pageable.getKw()}">
               <button type="submit"><i class="fa fa-search"></i></button>
             </form>
           </div>

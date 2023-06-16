@@ -3,8 +3,10 @@ package com.example.case_study_md3.service;
 import com.example.case_study_md3.model.EScale;
 import com.example.case_study_md3.model.EStudio;
 import com.example.case_study_md3.model.Product;
+import com.example.case_study_md3.model.ProductPageable;
 import com.example.case_study_md3.utils.DBContext;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,37 +22,54 @@ public class ProductService extends DBContext {
     private final String UPDATE_PRODUCT = "UPDATE `products` SET `name` = ?, `price` = ?, `leftQuantity` = ?, `scale` = ?, `idCategory` = ?, `description` = ?, `imgLink` = ?, `studio` = ? where id = ? and `deleteAt` is null";
     private final String DELETE_PRODUCT = "UPDATE `products` SET `deleteAt` = ? where id = ? and `deleteAt` is null";
     private final String SELECT_ALL_ADVANCE = "select p.*,c.`name` as categoryName from products p \n" +
-            "join categories c on p.idCategory = c.id\n" +
-            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?)\n" +
-            "order by %s %s\n" +
+            "join categories c on p.idCategory = c.id \n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) \n" +
+            "order by %s %s \n" +
             "limit ?, ?;";
     private final String SELECT_ALL_ADVANCE_TOTAL = "select count(*) as total from products p \n" +
-            "join categories c on p.idCategory = c.id\n" +
-            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?)\n";
+            "join categories c on p.idCategory = c.id \n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) \n";
     private final String SELECT_ALL_ADVANCE_FILTERS = "select p.*,c.`name` as categoryName from products p \n" +
-            "join categories c on p.idCategory = c.id\n" +
-            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.idCategory = ? and p.scale = ?\n" +
-            "order by %s %s\n" +
+            "join categories c on p.idCategory = c.id \n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.idCategory = ? and p.scale = ? \n" +
+            "order by %s %s \n" +
             "limit ?, ?;";
     private final String SELECT_ALL_ADVANCE_FILTERS_TOTAL = "select count(*) as total from products p \n" +
-            "join categories c on p.idCategory = c.id\n" +
-            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.idCategory = ? and p.scale = ?\n";
+            "join categories c on p.idCategory = c.id \n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.idCategory = ? and p.scale = ? \n";
     private final String SELECT_ALL_ADVANCE_CFILTER = "select p.*,c.`name` as categoryName from products p \n" +
-            "join categories c on p.idCategory = c.id\n" +
-            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.idCategory = ?\n" +
-            "order by %s %s\n" +
+            "join categories c on p.idCategory = c.id \n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.idCategory = ? \n" +
+            "order by %s %s \n" +
             "limit ?, ?;";
     private final String SELECT_ALL_ADVANCE_CFILTER_TOTAL = "select count(*) as total from products p \n" +
             "join categories c on p.idCategory = c.id\n" +
-            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.idCategory = ?\n";
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.idCategory = ? \n";
     private final String SELECT_ALL_ADVANCE_SFILTER = "select p.*,c.`name` as categoryName from products p \n" +
             "join categories c on p.idCategory = c.id\n" +
-            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.scale = ?\n" +
-            "order by %s %s\n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.scale = ? \n" +
+            "order by %s %s \n" +
             "limit ?, ?;";
     private final String SELECT_ALL_ADVANCE_SFILTER_TOTAL = "select count(*) as total from products p \n" +
-            "join categories c on p.idCategory = c.id\n" +
-            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.scale = ?\n";
+            "join categories c on p.idCategory = c.id \n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.scale = ? \n";
+    private final String SELECT_ALL_PRODUCT_ADVANCE = "select p.*,c.`name` as categoryName from products p \n" +
+            "join categories c on p.idCategory = c.id \n" +
+            "where (p.`name` like ? or p.price like ?  or p.`description` like ? or p.studio like ?) and p.`deleteAt` is null \n" +
+            "order by %s %s \n" +
+            "limit ?, ?;";
+    private final String SELECT_ALL_PRODUCT_ADVANCE_COUNT_TOTAL = "select count(*) as total from products p \n" +
+            "join categories c on p.idCategory = c.id \n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.`deleteAt` is null \n";
+    private final String SELECT_ALL_PRODUCT_FILTER_BY_CATEGORY = "select p.*,c.`name` as categoryName from products p \n" +
+            "join categories c on p.idCategory = c.id \n" +
+            "where (p.`name` like ? or p.price like ?  or p.`description` like ? or p.studio like ?) and (p.idCategory = ? and p.scale = ? and p.`deleteAt` is null) \n" +
+            "order by %s %s \n" +
+            "limit ?, ?;";
+    private final String SELECT_ALL_PRODUCT_FILTER_BY_CATEGORY_COUNT_TOTAL = "select p.*,c.`name` as categoryName from products p \n" +
+            "join categories c on p.idCategory = c.id \n" +
+            "where (p.`name` like ? or p.price like ?  or p.`description` like ? or p.studio like ?) and (p.idCategory = ? and p.scale = ? and p.`deleteAt` is null) \n";
+
     public List<Product> findAll(){
         List<Product> products = new ArrayList<>();
         try(Connection connection = getConnection();
@@ -85,9 +104,101 @@ public class ProductService extends DBContext {
         }
         return products;
     }
-    public List<Product> findAllAdvance(){
+    public List<Product> findAllAdvance(ProductPageable pageable){
         List<Product> products = new ArrayList<>();
+        //where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and `deleteAt` is null\n" +
+        //            "order by %s %s\n" +
+        //            "limit ?, ?;";
+        String sql = "";
+        try {
+            Connection connection = getConnection();
+            if (pageable.getIdCategory() == -1) {
+                getAllProduct(connection, products, pageable);
+            }  else {
+                getAllProductFilter(connection, products, pageable);
+            }
+            connection.close();
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
         return products;
+    }
+
+    private void getAllProductFilter(Connection connection, List<Product> products, ProductPageable pageable) throws SQLException {
+        String sql = "";
+        sql = String.format(SELECT_ALL_PRODUCT_FILTER_BY_CATEGORY, pageable.getSortField(), pageable.getOrder());
+        // "where (p.`name` like ? or p.price like ?  or p.`description` like ? or p.studio like ?) and (p.idCategory = ? and p.scale = ? and p.`deleteAt` is null) \n" +
+        //            "order by %s %s \n" +
+        //            "limit ?, ?;";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, "%" + pageable.getKw() + "%");
+        ps.setString(2, "%" + pageable.getKw() + "%");
+        ps.setString(3, "%" + pageable.getKw() + "%");
+        ps.setString(4, "%" + pageable.getKw() + "%");
+        ps.setInt(5, pageable.getIdCategory());
+        ps.setString(6, "%" + pageable.getScale() + "%");
+        ps.setInt(7, (pageable.getPage() - 1) * pageable.getLimit());
+        ps.setInt(8, pageable.getLimit());
+        System.out.println("Funtion find advance " + ps);
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Product product = getProductFromRs(rs);
+            products.add(product);
+        }
+//            "where (p.`name` like ? or p.price like ?  or p.`description` like ? or p.studio like ?) and (p.idCategory = ? and p.scale = ? and p.`deleteAt` is null) \n";
+        //Tính tổng số trang
+        ps = connection.prepareStatement(SELECT_ALL_PRODUCT_FILTER_BY_CATEGORY_COUNT_TOTAL);
+        ps.setString(1, "%" + pageable.getKw() + "%");
+        ps.setString(2, "%" + pageable.getKw() + "%");
+        ps.setString(3, "%" + pageable.getKw() + "%");
+        ps.setString(4, "%" + pageable.getKw() + "%");
+        ps.setInt(5, pageable.getIdCategory());
+        ps.setString(6, "%" + pageable.getScale() + "%");
+
+
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            //SQL_ADVANCED_CUSTOMER_TOTAL: count(*) as total
+            int total = rs.getInt("total");
+            // total * 1.0 để thành số thực vì'/' sẽ ra số nguyên
+            pageable.setTotalPage((int)Math.ceil(total * 1.0 / pageable.getLimit()));
+        }
+    }
+
+    private void getAllProduct(Connection connection, List<Product> products, ProductPageable pageable) throws SQLException {
+        String sql = "";
+        sql = String.format(SELECT_ALL_PRODUCT_ADVANCE, pageable.getSortField(), pageable.getOrder());
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, "%" + pageable.getKw() + "%");
+        ps.setString(2, "%" + pageable.getKw() + "%");
+        ps.setString(3, "%" + pageable.getKw() + "%");
+        ps.setString(4, "%" + pageable.getKw() + "%");
+        ps.setInt(5, (pageable.getPage() - 1) * pageable.getLimit());
+        ps.setInt(6, pageable.getLimit());
+        System.out.println("Funtion find advance " + ps);
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Product product = getProductFromRs(rs);
+            products.add(product);
+        }
+
+        //Tính tổng số trang
+        ps = connection.prepareStatement(SELECT_ALL_PRODUCT_ADVANCE_COUNT_TOTAL);
+        ps.setString(1, "%" + pageable.getKw() + "%");
+        ps.setString(2, "%" + pageable.getKw() + "%");
+        ps.setString(3, "%" + pageable.getKw() + "%");
+        ps.setString(4, "%" + pageable.getKw() + "%");
+        ps.setString(5, "%" + pageable.getKw() + "%");
+
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            //SQL_ADVANCED_CUSTOMER_TOTAL: count(*) as total
+            int total = rs.getInt("total");
+            // total * 1.0 để thành số thực vì'/' sẽ ra số nguyên
+            pageable.setTotalPage((int)Math.ceil(total * 1.0 / pageable.getLimit()));
+        }
     }
 
     private static Product getProductFromRs(ResultSet rs) throws SQLException {
@@ -183,4 +294,7 @@ public class ProductService extends DBContext {
             printSQLException(sqlException);
         }
     }
+
+
+
 }

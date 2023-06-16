@@ -1,9 +1,6 @@
 package com.example.case_study_md3.controller.customer;
 
-import com.example.case_study_md3.model.Category;
-import com.example.case_study_md3.model.EScale;
-import com.example.case_study_md3.model.Product;
-import com.example.case_study_md3.model.User;
+import com.example.case_study_md3.model.*;
 import com.example.case_study_md3.service.CategoryService;
 import com.example.case_study_md3.service.ProductService;
 import com.example.case_study_md3.utils.Config;
@@ -28,10 +25,16 @@ public class ProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
+        ProductPageable pageable = new ProductPageable();
+        inputProductPageable(req, pageable);
 
         EScale[] scales = EScale.values();
         Map<Integer, Category> categoryMap = categoryService.getCategoryMap();
-        List<Product> products = productService.findAll();
+//        List<Product> products = productService.findAll();
+        List<Product> products = productService.findAllAdvance(pageable);
+
+        User user = (User) req.getSession().getAttribute("user");
+        
 
         String action = req.getParameter("action");
         if (action == null){
@@ -50,6 +53,7 @@ public class ProductServlet extends HttpServlet {
             default:
                 List<Product> specials = productService.findSpecial();
 
+                req.setAttribute("pageable", pageable);
                 req.setAttribute("scales",scales);
                 req.setAttribute("specials",specials);
                 req.setAttribute("products",products);
@@ -78,6 +82,37 @@ public class ProductServlet extends HttpServlet {
                 req.getRequestDispatcher("/WEB-INF/homepage/home.jsp").forward(req,resp);
                 break;
         }
+    }
+    private void inputProductPageable(HttpServletRequest request, ProductPageable pageable) {
+        if (request.getParameter("kw") != null) {
+            String kw = request.getParameter("kw");
+            pageable.setKw(kw);
+        }
+        if (request.getParameter("page") != null) {
+            int page = Integer.parseInt(request.getParameter("page"));
+            pageable.setPage(page);
+        }
+        if (request.getParameter("limit") != null) {
+            int limit = Integer.parseInt(request.getParameter("limit"));
+            pageable.setPage(limit);
+        }
+        if (request.getParameter("sortfield") != null) {
+            String sortField = request.getParameter("sortfield");
+            pageable.setSortField(sortField);
+        }
+        if (request.getParameter("order") != null) {
+            String order = request.getParameter("order");
+            pageable.setOrder(order);
+        }
+        if (request.getParameter("category") != null) {
+            int idCategory = Integer.parseInt(request.getParameter("category"));
+            pageable.setIdCategory(idCategory);
+        }
+        if (request.getParameter("scale") != null) {
+            String scale = request.getParameter("scale");
+            pageable.setScale(scale);
+        }
+
     }
 
     public void destroy() {
