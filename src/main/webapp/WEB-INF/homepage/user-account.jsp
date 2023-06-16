@@ -1,3 +1,6 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!doctype html>
 <html class="no-js" lang="zxx">
 <head>
@@ -146,42 +149,37 @@
                                     <div class="login">
                                         <div class="login_form_container">
                                             <div class="account_login_form">
-                                                <form action="#">
-                                                    <p>Already have an account? <a href="#">Log in instead!</a></p>
-                                                    <div class="input-radio">
-                                                        <span class="custom-radio"><input type="radio" value="1" name="id_gender"> Mr.</span>
-                                                        <span class="custom-radio"><input type="radio" value="1" name="id_gender"> Mrs.</span>
-                                                    </div> <br>
-                                                    <label>First Name</label>
-                                                    <input type="text" name="first-name">
-                                                    <label>Last Name</label>
-                                                    <input type="text" name="last-name">
-                                                    <label>Email</label>
-                                                    <input type="text" name="email-name">
-                                                    <label>Password</label>
-                                                    <input type="password" name="user-password">
-                                                    <label>Birthdate</label>
-                                                    <input type="text" placeholder="MM/DD/YYYY" value="" name="birthday">
-                                                    <span class="example">
-                                                                      (E.g.: 05/31/1970)
-                                                                    </span>
-                                                    <br>
-                                                    <span class="custom_checkbox">
-                                                                        <input type="checkbox" value="1" name="optin">
-                                                                        <label>Receive offers from our partners</label>
-                                                                    </span>
-                                                    <br>
-                                                    <span class="custom_checkbox">
-                                                                        <input type="checkbox" value="1" name="newsletter">
-                                                                        <label>Sign up for our newsletter<br><em>You may unsubscribe at any moment. For that purpose, please find our contact info in the legal notice.</em></label>
-                                                                    </span>
-<%--                                                    <div class="save_button primary_btn default_button">--%>
-<%--                                                        <a href="#">Save</a>--%>
-<%--                                                    </div>--%>
+                                                <form method="post">
+                                                    <c:if test="${requestScope.errors != null}">
+                                                        <div class="alert alert-danger">
+                                                            <ul>
+                                                                <c:forEach items="${requestScope.errors}" var="e">
+                                                                    <li>${e}</li>
+                                                                </c:forEach>
+                                                            </ul>
+                                                        </div>
+                                                    </c:if>
+                                                    <label class="font-weight-bold">Full Name</label>
+                                                    <input type="text" name="name" value="${sessionScope.user.name}">
+                                                    <label class="font-weight-bold">Address</label>
+                                                    <input type="text" name="address" value="${sessionScope.user.address}">
+                                                    <label class="font-weight-bold">Phone</label>
+                                                    <input type="text" name="phone" value="${sessionScope.user.phone}">
+                                                    <label class="font-weight-bold">Email</label>
+                                                    <input type="text" name="email" value="${sessionScope.user.email}">
+                                                    <label class="font-weight-bold">Password</label>
+                                                    <input type="password" name="password" value="${sessionScope.user.password}">
+                                                    <label class="font-weight-bold">Birthdate</label>
+                                                    <input type="text" placeholder="YYYY/MM/DD" name="birthday" value="<fmt:formatDate value="${sessionScope.user.dob}" pattern="yyyy-MM-dd"/>">
                                                     <div class="col-3">
                                                         <button class="btn btn-md btn-block btn-primary waves-effect waves-light" type="submit">Save</button>
                                                     </div>
                                                 </form>
+                                                <c:if test="${requestScope.message != null}">
+                                                    <div class="alert alert-success col-md-5 float-md-right">
+                                                        <strong>${requestScope.message}</strong>
+                                                    </div>
+                                                </c:if>
                                             </div>
                                         </div>
                                     </div>

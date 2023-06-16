@@ -35,7 +35,7 @@
             </c:if>
             <c:if test="${sessionScope.user != null}">
               <li><a href="/user?action=logout" title="Logout">Logout</a></li>
-              <li class="font-weight-bold">Hello: ${sessionScope.user.email}</li>
+              <li><a class="font-weight-bold" href="/user?action=myAccount">Hello: ${sessionScope.user.name}</a></li>
             </c:if>
           </ul>
         </div>
