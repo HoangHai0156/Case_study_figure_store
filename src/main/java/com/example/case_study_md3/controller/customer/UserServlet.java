@@ -1,4 +1,4 @@
-package com.example.case_study_md3.controller;
+package com.example.case_study_md3.controller.customer;
 import com.example.case_study_md3.model.ERole;
 import com.example.case_study_md3.model.User;
 import com.example.case_study_md3.service.UserService;

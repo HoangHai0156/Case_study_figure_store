@@ -1,4 +1,4 @@
-package com.example.case_study_md3.controller;
+package com.example.case_study_md3.controller.customer;
 
 import com.example.case_study_md3.model.Order;
 import com.example.case_study_md3.model.OrderItem;
