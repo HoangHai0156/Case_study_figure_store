@@ -42,7 +42,7 @@ public class CartServlet extends HttpServlet {
             case "add":
                 addToCart(request, response, action, session);
                 break;
-            case "change-quantity":
+            case "change":
                 changeQuantity(request, response, action, session);
                 break;
             default:
@@ -73,7 +73,7 @@ public class CartServlet extends HttpServlet {
         int idProduct = Integer.parseInt(request.getParameter("id"));
         Product product = productService.findProduct(idProduct);
 
-        List<Product> products = productService.findAll();
+        List<Product> allProducts = productService.findAll();
         int quantity = Integer.parseInt(request.getParameter("quantity"));
         User user = (User) session.getAttribute("user");
         if (user == null){
@@ -158,7 +158,9 @@ public class CartServlet extends HttpServlet {
             }else {
                 OrderItem orderItem = orderItemService.findOrderItem(unpaidOrder.getId(), idProduct);
                 if (orderItem != null){
-                    quantity = orderItem.getQuantity() + quantity;
+                    if (action.equals("add")){
+                        quantity = orderItem.getQuantity() + quantity;
+                    }
                     if (quantity > 10){
                         cartMess = "Số lượng muốn mua không hợp lệ !";
 
@@ -186,7 +188,7 @@ public class CartServlet extends HttpServlet {
             unpaidOrder.setOrderItems(orderItems);
 
             request.setAttribute("order",unpaidOrder);
-            request.setAttribute("products",products);
+            request.setAttribute("products",allProducts);
             request.getRequestDispatcher(Config.HOMEPAGE+"cart.jsp").forward(request,response);
         }
 

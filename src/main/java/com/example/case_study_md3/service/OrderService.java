@@ -12,6 +12,7 @@ public class OrderService extends DBContext{
     private static final String SELECT_ALL_PAID_ORDERS_USER = "SELECT * FROM orders  where isPaid = true and idUser = ?;";
     private static final String SELECT_ALL_UNPAID_ORDERS = "SELECT * FROM orders  where isPaid = false;";
     private static final String SELECT_USER_UNPAID_ORDER = "SELECT * FROM orders  where isPaid = false and idUser = ?;";
+    private static final String SELECT_USER_ORDERS = "SELECT * FROM orders where idUser = ?;";
     private static final String CREATE_ORDER = "INSERT INTO `orders` (`createAt`, `idUser`, `isPaid`, `subTotal`, `discount`) VALUES (?, ?, ?, ?, ?);";
     private static final String SELECT_ORDER_BY_ID = "SELECT * FROM orders  where id = ?;";
     private static final String UPDATE_ORDER = "UPDATE `orders` SET `idUser` = ?, `isPaid` = ?, `subTotal` = ?, `discount` = ? WHERE (`id` = ?);";
@@ -32,6 +33,23 @@ public class OrderService extends DBContext{
             connection.close();
         } catch (SQLException e) {
             printSQLException(e);
+        }
+        return orders;
+    }
+    public List<Order> findUserOrders(int idUser){
+        List<Order> orders = new ArrayList<>();
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_ORDERS)) {
+
+            preparedStatement.setInt(1,idUser);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                Order order = getOrderFromResultSet(rs);
+                orders.add(order);
+            }
+
+        }catch (SQLException sqlException){
+            printSQLException(sqlException);
         }
         return orders;
     }

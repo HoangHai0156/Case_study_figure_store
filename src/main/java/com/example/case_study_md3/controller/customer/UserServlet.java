@@ -1,6 +1,10 @@
 package com.example.case_study_md3.controller.customer;
 import com.example.case_study_md3.model.ERole;
+import com.example.case_study_md3.model.Order;
+import com.example.case_study_md3.model.OrderItem;
 import com.example.case_study_md3.model.User;
+import com.example.case_study_md3.service.OrderItemService;
+import com.example.case_study_md3.service.OrderService;
 import com.example.case_study_md3.service.UserService;
 import com.example.case_study_md3.utils.Config;
 import com.example.case_study_md3.utils.DateFormat;
@@ -17,8 +21,12 @@ import javax.servlet.annotation.*;
 @WebServlet(name = "UserServlet", value = "/user")
 public class UserServlet extends HttpServlet {
     private UserService userService;
+    private OrderService orderService;
+    private OrderItemService orderItemService;
     public void init() {
         userService = new UserService();
+        orderService = new OrderService();
+        orderItemService = new OrderItemService();
     }
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String action = req.getParameter("action");
@@ -52,6 +60,10 @@ public class UserServlet extends HttpServlet {
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         if (user != null) {
+            List<Order> orders = orderService.findUserOrders(user.getId());
+//            List<OrderItem> orderItems = orderItemService.
+
+            req.setAttribute("orders",orders);
             req.getRequestDispatcher("/WEB-INF/homepage/user-account.jsp").forward(req, resp);
         } else {
             resp.sendRedirect("/user?action=login");

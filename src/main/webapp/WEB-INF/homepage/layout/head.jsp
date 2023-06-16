@@ -29,7 +29,7 @@
             <li><a href="contact.html" title="Contact">Contact</a></li>
             <li><a href="wishlist.html" title="wishlist">My wishlist</a></li>
             <li><a href="/user?action=myAccount" title="My account">My account</a></li>
-            <li><a href="cart.html" title="My cart">My cart</a></li>
+            <li><a href="/cart" title="My cart">My cart</a></li>
             <c:if test="${sessionScope.user == null}">
               <li><a href="/user?action=login" title="Login">Login</a></li>
             </c:if>
@@ -63,7 +63,7 @@
             </form>
           </div>
           <div class="shopping_cart">
-            <a href="#"><i class="fa fa-shopping-cart"></i> ${requestScope.order.getOrderItems().size()}Items - $${requestScope.order.getSubTotal()}.00 <i class="fa fa-angle-down"></i></a>
+            <a href="#"><i class="fa fa-shopping-cart"></i> ${requestScope.order.getOrderItems().size()} Item(s) - $${requestScope.order.getSubTotal()} <i class="fa fa-angle-down"></i></a>
 
             <!--mini cart-->
             <div class="mini_cart">
@@ -77,7 +77,7 @@
                       </div>
                       <div class="cart_info">
                         <a href="#">${p.getName()}</a>
-                        <span class="cart_price">$${p.getPrice() * oT.getQuantity()}.00</span>
+                        <span class="cart_price">$${p.getPrice() * oT.getQuantity()}</span>
                         <span class="quantity">Qty: ${oT.getQuantity()}</span>
                       </div>
                       <div class="cart_remove">
@@ -95,7 +95,7 @@
               </div>
               <div class="total_price">
                 <span> total </span>
-                <span class="prices">  $${requestScope.order.getSubTotal() + 10}.00  </span>
+                <span class="prices">  $${requestScope.order.getSubTotal() + 10}  </span>
               </div>
               <div class="cart_button">
                 <a href="checkout.html"> Check out</a>

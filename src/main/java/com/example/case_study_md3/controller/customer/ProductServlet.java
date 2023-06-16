@@ -2,6 +2,7 @@ package com.example.case_study_md3.controller.customer;
 
 import com.example.case_study_md3.model.*;
 import com.example.case_study_md3.service.CategoryService;
+import com.example.case_study_md3.service.OrderService;
 import com.example.case_study_md3.service.ProductService;
 import com.example.case_study_md3.utils.Config;
 
@@ -16,6 +17,7 @@ import javax.servlet.annotation.*;
 public class ProductServlet extends HttpServlet {
     private ProductService productService = new ProductService();
     private CategoryService categoryService = new CategoryService();
+    private OrderService orderService = new OrderService();
 
     public void init() {
 
@@ -30,11 +32,14 @@ public class ProductServlet extends HttpServlet {
 
         EScale[] scales = EScale.values();
         Map<Integer, Category> categoryMap = categoryService.getCategoryMap();
-//        List<Product> products = productService.findAll();
+//        List<Product> allProducts = productService.findAll();
         List<Product> products = productService.findAllAdvance(pageable);
 
         User user = (User) req.getSession().getAttribute("user");
-        
+        Order unpaidOrder = new Order();
+        if (user != null){
+            unpaidOrder = orderService.findUserUnPaidOrder(user.getId());
+        }
 
         String action = req.getParameter("action");
         if (action == null){
@@ -45,6 +50,8 @@ public class ProductServlet extends HttpServlet {
                 int id = Integer.parseInt(req.getParameter("id"));
                 Product product = productService.findProduct(id);
 
+                req.setAttribute("products",products);
+                req.setAttribute("order",unpaidOrder);
                 req.setAttribute("scales",scales);
                 req.setAttribute("product",product);
                 req.setAttribute("categoryMap",categoryMap);
@@ -53,6 +60,8 @@ public class ProductServlet extends HttpServlet {
             default:
                 List<Product> specials = productService.findSpecial();
 
+                //allProducts là tất cả product, kích thước không bị ảnh hưởng bởi pageable. Dùng cho head, hiện mini cart
+                req.setAttribute("order",unpaidOrder);
                 req.setAttribute("pageable", pageable);
                 req.setAttribute("scales",scales);
                 req.setAttribute("specials",specials);

@@ -82,20 +82,24 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>May 10, 2018</td>
-                                                <td><span class="success">Completed</span></td>
-                                                <td>$25.00 for 1 item </td>
-                                                <td><a href="cart.html" class="view">view</a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>May 10, 2018</td>
-                                                <td>Processing</td>
-                                                <td>$17.00 for 1 item </td>
-                                                <td><a href="cart.html" class="view">view</a></td>
-                                            </tr>
+                                            <c:forEach var="o" items="${requestScope.orders}">
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td><fmt:formatDate value="${o.getCreateAt()}" pattern="yyyy-MM-dd"/></td>
+                                                    <td><span class="success">
+                                                        <c:choose>
+                                                            <c:when test="${o.isPaid() == true}">
+                                                                Completed
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                Processing
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </span></td>
+                                                    <td>$${o.getSubTotal()} </td>
+                                                    <td><a href="/cart" class="view">view</a></td>
+                                                </tr>
+                                            </c:forEach>
                                             </tbody>
                                         </table>
                                     </div>

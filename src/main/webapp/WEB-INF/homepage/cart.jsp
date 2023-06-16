@@ -71,8 +71,8 @@
                                                         <td class="product_thumb"><a href="#"><img src="${p.getImgLink()}" alt=""></a></td>
                                                         <td class="product_name"><a href="#">${p.getName()}</a></td>
                                                         <td class="product-price">${p.getPrice()}</td>
-                                                        <td class="product_quantity" ><input  min="0" max="100" value="${oT.getQuantity()}" type="number" name="quantity" ></td>
-                                                        <td class="product_total">${p.getPrice() * oT.getQuantity()}.00</td>
+                                                        <td class="product_quantity" ><input onchange="handleQuantityChange(${p.getId()},this.value)" min="1" max="10" value="${oT.getQuantity()}" type="number" name="quantity" ></td>
+                                                        <td class="product_total">${p.getPrice() * oT.getQuantity()}</td>
                                                     </tr>
                                                 </c:if>
                                             </c:forEach>
@@ -137,13 +137,13 @@
                                         </div>
                                         <div class="cart_subtotal ">
                                             <p>Shipping</p>
-                                            <p class="cart_amount"><span>Ship:</span> 10</p>
+                                            <p class="cart_amount"><span>Ship:</span> $10.00</p>
                                         </div>
                                         <a href="#">Calculate shipping</a>
 
                                         <div class="cart_subtotal">
                                             <p>Total</p>
-                                            <p class="cart_amount">${requestScope.order.getSubTotal() - (requestScope.order.getSubTotal() * requestScope.order.getDiscount() / 100) + 10}</p>
+                                            <p class="cart_amount">$${requestScope.order.getSubTotal() - (requestScope.order.getSubTotal() * requestScope.order.getDiscount() / 100) + 10}</p>
                                         </div>
                                         <div class="checkout_btn">
                                             <a href="#">Proceed to Checkout</a>
@@ -174,10 +174,8 @@
 <!-- all js here -->
 <jsp:include page="/WEB-INF/homepage/layout/js_footer.jsp"></jsp:include>
 <script>
-    function handleQuantityChange(idProduct, element){
-        let newQuantity = element.value;
-        console.log(newQuantity);
-        let url = "/cart?action=change-quantity&id=" + idProduct;
+    function handleQuantityChange(idProduct, quantity){
+        let url = "/cart?action=change&id="+idProduct+"&quantity="+quantity;
         window.location.assign(url);
     }
 </script>
