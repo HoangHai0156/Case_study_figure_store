@@ -85,6 +85,9 @@
                                     <label>quantity</label>
                                     <input name="quantity" min="0" max="100" value="1" type="number">
                                     <button type="submit"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                                    <c:if test="${cartMess != null}">
+                                        <p style="color: red">${cartMess}</p>
+                                    </c:if>
                                 </form>
                             </div>
 

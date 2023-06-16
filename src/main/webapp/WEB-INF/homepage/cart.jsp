@@ -62,7 +62,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <c:forEach items="${sessionScope.order.getOrderItems()}" var="oT">
+                                        <c:forEach items="${requestScope.order.getOrderItems()}" var="oT">
 
                                             <c:forEach items="${requestScope.products}" var="p">
                                                 <c:if test="${p.getId() == oT.getIdProduct()}">
@@ -73,11 +73,10 @@
                                                         <td class="product-price">${p.getPrice()}</td>
                                                         <td class="product_quantity" ><input  min="0" max="100" value="${oT.getQuantity()}" type="number" name="quantity" ></td>
                                                         <td class="product_total">${p.getPrice() * oT.getQuantity()}.00</td>
-
-
                                                     </tr>
                                                 </c:if>
                                             </c:forEach>
+
                                         </c:forEach>
                                         <%--
                                                <tr>
@@ -130,11 +129,11 @@
                                     <div class="coupon_inner">
                                         <div class="cart_subtotal">
                                             <p>Subtotal</p>
-                                            <p class="cart_amount">${order.getSubTotal()}</p>
+                                            <p class="cart_amount">${requestScope.order.getSubTotal()}</p>
                                         </div>
                                         <div class="cart_subtotal ">
                                             <p>Discount</p>
-                                            <p class="cart_amount"><span>Discount</span> ${order.getDiscount()}%</p>
+                                            <p class="cart_amount"><span>Discount</span> ${requestScope.order.getDiscount()}%</p>
                                         </div>
                                         <div class="cart_subtotal ">
                                             <p>Shipping</p>
@@ -144,7 +143,7 @@
 
                                         <div class="cart_subtotal">
                                             <p>Total</p>
-                                            <p class="cart_amount">${order.getSubTotal() - order.getDiscount() * order.getSubTotal() + 10}</p>
+                                            <p class="cart_amount">${requestScope.order.getSubTotal() - (requestScope.order.getSubTotal() * requestScope.order.getDiscount() / 100) + 10}</p>
                                         </div>
                                         <div class="checkout_btn">
                                             <a href="#">Proceed to Checkout</a>

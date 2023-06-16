@@ -9,7 +9,7 @@ public class Order {
     private Date createAt;
     private int idUser;
     private boolean isPaid = false;
-    private float subTotal;
+    private float subTotal = 0;
     private float discount = 10;
     private List<OrderItem> orderItems;
 

@@ -1,34 +1,55 @@
 package com.example.case_study_md3.service;
 
 import com.example.case_study_md3.model.Order;
-import com.example.case_study_md3.model.User;
 import com.example.case_study_md3.utils.DBContext;
 
 import java.sql.*;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderService extends DBContext{
-    private static final String SECLECT_ALL_PAID_ORDERS = "SELECT * FROM orders  where isPaid = true;";
-    private static final String SECLECT_ALL_UNPAID_ORDERS = "SELECT * FROM orders  where isPaid = false;";
+    private static final String SELECT_ALL_PAID_ORDERS = "SELECT * FROM orders  where isPaid = true;";
+    private static final String SELECT_ALL_PAID_ORDERS_USER = "SELECT * FROM orders  where isPaid = true and idUser = ?;";
+    private static final String SELECT_ALL_UNPAID_ORDERS = "SELECT * FROM orders  where isPaid = false;";
+    private static final String SELECT_USER_UNPAID_ORDER = "SELECT * FROM orders  where isPaid = false and idUser = ?;";
     private static final String CREATE_ORDER = "INSERT INTO `orders` (`createAt`, `idUser`, `isPaid`, `subTotal`, `discount`) VALUES (?, ?, ?, ?, ?);";
     private static final String SELECT_ORDER_BY_ID = "SELECT * FROM orders  where id = ?;";
     private static final String UPDATE_ORDER = "UPDATE `orders` SET `idUser` = ?, `isPaid` = ?, `subTotal` = ?, `discount` = ? WHERE (`id` = ?);";
     private static final String DELETE_ORDER = "DELETE FROM `orders` WHERE (`id` = ?);";
     public List<Order> findAllPaidOrders(){
         List<Order> orders = new ArrayList<>();
-        Connection connection = getConnection();
         try {
-            PreparedStatement ps = connection.prepareStatement(SECLECT_ALL_PAID_ORDERS);
+            Connection connection = getConnection();
+            PreparedStatement ps = connection.prepareStatement(SELECT_ALL_PAID_ORDERS);
 
             System.out.println("findAllPaidOrder " + ps);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 Order order = getOrderFromResultSet(rs);
+                orders.add(order);
             }
-//            connection.close();
+            connection.close();
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        return orders;
+    }
+    public List<Order> findAllPaidOrdersByUser(int id){
+        List<Order> orders = new ArrayList<>();
+        try {
+            Connection connection = getConnection();
+            PreparedStatement ps = connection.prepareStatement(SELECT_ALL_PAID_ORDERS_USER);
+
+            ps.setInt(1,id);
+            System.out.println("findAllPaidOrder " + ps);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Order order = getOrderFromResultSet(rs);
+                orders.add(order);
+            }
+            connection.close();
         } catch (SQLException e) {
             printSQLException(e);
         }
@@ -36,25 +57,44 @@ public class OrderService extends DBContext{
     }
     public List<Order> findAllUnPaidOrders(){
         List<Order> orders = new ArrayList<>();
-        Connection connection = getConnection();
         try {
-            PreparedStatement ps = connection.prepareStatement(SECLECT_ALL_UNPAID_ORDERS);
+            Connection connection = getConnection();
+            PreparedStatement ps = connection.prepareStatement(SELECT_ALL_UNPAID_ORDERS);
 
             System.out.println("findAllPaidOrder " + ps);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 Order order = getOrderFromResultSet(rs);
+                orders.add(order);
             }
-//            connection.close();
+            connection.close();
         } catch (SQLException e) {
             printSQLException(e);
         }
         return orders;
     }
-    public Order findOrderById(int id){
-        Connection connection = getConnection();
+    public Order findUserUnPaidOrder(int id){
         try {
+            Connection connection = getConnection();
+            PreparedStatement ps = connection.prepareStatement(SELECT_USER_UNPAID_ORDER);
+
+            ps.setInt(1,id);
+            System.out.println("findAllPaidOrder " + ps);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                return getOrderFromResultSet(rs);
+            }
+            connection.close();
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        return null;
+    }
+    public Order findOrderById(int id){
+        try {
+            Connection connection = getConnection();
             PreparedStatement ps = connection.prepareStatement(SELECT_ORDER_BY_ID);
 
             System.out.println("Find Order by ID " + ps);
@@ -82,14 +122,13 @@ public class OrderService extends DBContext{
         float subTotal = rs.getFloat("subTotal");
         float discount = rs.getFloat("discount");
 
-        Order order = new Order(id, createAt, idUser, isPaid, subTotal, discount);
-        return order;
+        return new Order(id, createAt, idUser, isPaid, subTotal, discount);
     }
 
 
     public void save (Order order){
-        Connection connection = getConnection();
         try {
+            Connection connection = getConnection();
             PreparedStatement ps = connection.prepareStatement(CREATE_ORDER);
             java.util.Date createAt = new java.util.Date();
             //`createAt`, `idUser`, `isPaid`, `subTotal`, `discount`
@@ -107,8 +146,8 @@ public class OrderService extends DBContext{
         }
     }
     public void update (int id, Order order){
-        Connection connection = getConnection();
         try {
+            Connection connection = getConnection();
             PreparedStatement ps = connection.prepareStatement(UPDATE_ORDER);
             ps.setInt(1, order.getIdUser());
             ps.setBoolean(2, order.isPaid());
@@ -117,6 +156,7 @@ public class OrderService extends DBContext{
             ps.setInt(5, id);
 
             System.out.println("Function update"+ ps);
+            ps.executeUpdate();
             connection.close();
 
         } catch (SQLException e) {
@@ -124,8 +164,8 @@ public class OrderService extends DBContext{
         }
     }
     public void remove (int id){
-        Connection connection = getConnection();
         try {
+            Connection connection = getConnection();
             PreparedStatement ps = connection.prepareStatement(DELETE_ORDER);
             ps.setInt(1, id);
             System.out.println("Function remove order" + ps);
