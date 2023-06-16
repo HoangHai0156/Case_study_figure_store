@@ -9,6 +9,10 @@ public class OrderItem {
 
     public OrderItem() {
     }
+    public OrderItem(int idProduct, int quantity) {
+        this.idProduct = idProduct;
+        this.quantity = quantity;
+    }
 
     public OrderItem(int id, int idOrder, int idProduct, int quantity, float total) {
         this.id = id;

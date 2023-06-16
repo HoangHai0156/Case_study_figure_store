@@ -40,7 +40,10 @@ public class CartServlet extends HttpServlet {
         }
         switch (action) {
             case "add":
-                addToCart(request, response);
+                addToCart(request, response, action);
+                break;
+            case "change-quantity":
+                changeQuantity(request, response, action);
                 break;
             default:
                 showCart(request, response);
@@ -48,63 +51,70 @@ public class CartServlet extends HttpServlet {
         }
     }
 
+    private void changeQuantity(HttpServletRequest request, HttpServletResponse response, String action) throws ServletException, IOException {
+        addToCart(request, response, action);
+
+    }
+
     private void showCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("/WEB-INF/homepage/cart.jsp").forward(request,response);
     }
-    private void addToCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void addToCart(HttpServletRequest request, HttpServletResponse response, String action) throws ServletException, IOException {
         int idProduct = Integer.parseInt(request.getParameter("id"));
         Product product = productService.findProduct(idProduct);
 
-//        int quantity = Integer.parseInt(request.getParameter("quantity"));
-        int quantity = 1;
-//        float price = Float.parseFloat(request.getParameter("price"));
-        float price = product.getPrice();
-//        User user = (User) request.getSession().getAttribute("user");
-//        int idUser = user.getId();
-        User user = userService.findUser(1);
+        /** Hiển thị ra cart chưa cần
+
+        User user = (User) request.getSession().getAttribute("user");
         int idUser = user.getId();
+         idOrder
+         **/
+        int quantity = 1;
+        if (action.equals("change-quantity")) {
+            quantity = Integer.parseInt(request.getParameter("quantity"));
+        }
+
         Order order = null;
         if (request.getSession().getAttribute("cart") != null) {
             order = (Order) request.getSession().getAttribute("cart");
         } else {
             order = new Order();
         }
-        order.setIdUser(idUser);
-//        order.setId((int) (System.currentTimeMillis() % 10000));
-        List<OrderItem> orderItems = new ArrayList<>();
-//            int id, int idOrder, int idProduct, int quantity, float total
-        int id = (int) (System.currentTimeMillis() % 10000);
-        int idOrder = order.getId();
-        float total = quantity * price;
 
-        OrderItem orderItem = new OrderItem(id, idOrder, idProduct, quantity, total) ;
         if (order.getOrderItems() == null) {
+            List<OrderItem> orderItems = new ArrayList<>();
+            OrderItem orderItem = new OrderItem(idProduct, 1) ;
+            orderItems.add(orderItem);
+
             order.setOrderItems(orderItems);
         } else {
             boolean check = checkIdProductExistOrder(idProduct, order);
             if (check) {
                 updateProductInOrder(idProduct, quantity, order);
             } else {
-                order.getOrderItems().add(orderItem);
+                addProductToOrder(idProduct, quantity, order);
             }
         }
 
-        float subTotal = 0;
         List<Product> products = new ArrayList<>();
+//        products.add(product);
         for (int i = 0; i < order.getOrderItems().size(); i++){
-            subTotal += order.getOrderItems().get(i).getTotal();
-            int idP = order.getOrderItems().get(i).getId();
-            Product p = productService.findProduct(idP);
+            OrderItem orderItem = order.getOrderItems().get(i);
+            Product p = productService.findProduct(orderItem.getIdProduct());
             products.add(p);
         }
-        order.setSubTotal(subTotal);
 
         // Chuyển thông tin từ order (chưa có hình ảnh, tên sp) sang cart (hình ảnh, tên sp)
-        request.getSession().setAttribute("products", products);
-        request.getSession().setAttribute("order", order);
-//        request.getSession().setAttribute("orderItem", order.getOrderItems());
+        request.setAttribute("products", products);
+        HttpSession session = request.getSession();
+        session.setAttribute("order", order);
+
         request.getRequestDispatcher("/WEB-INF/homepage/cart.jsp").forward(request, response);
 
+    }
+    private void addProductToOrder(int idProduct, int quantity, Order order) {
+        OrderItem orderItem = new OrderItem(idProduct, quantity);
+        order.getOrderItems().add(orderItem);
     }
 
     private void updateProductInOrder(int id, int quantity, Order order) {

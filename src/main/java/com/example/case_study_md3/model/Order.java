@@ -1,5 +1,6 @@
 package com.example.case_study_md3.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +10,7 @@ public class Order {
     private int idUser;
     private boolean isPaid = false;
     private float subTotal;
-    private float discount;
+    private float discount = 10;
     private List<OrderItem> orderItems;
 
 
@@ -20,7 +21,6 @@ public class Order {
         this.id = id;
         this.createAt = createAt;
         this.idUser = idUser;
-        this.isPaid = isPaid;
         this.subTotal = subTotal;
         this.discount = discount;
         this.orderItems = orderItems;
@@ -35,10 +35,9 @@ public class Order {
         this.discount = discount;
     }
 
-    public Order(Date createAt, int idUser,  float subTotal, float discount) {
+    public Order(Date createAt, int idUser, float discount) {
         this.createAt = createAt;
         this.idUser = idUser;
-        this.subTotal = subTotal;
         this.discount = discount;
     }
 

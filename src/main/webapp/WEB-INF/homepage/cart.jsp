@@ -45,7 +45,7 @@
 
             <!--shopping cart area start -->
             <div class="shopping_cart_area">
-                <form action="#">
+                <form action="#" name="cart">
                     <div class="row">
                         <div class="col-12">
                             <div class="table_desc">
@@ -62,15 +62,16 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <c:forEach items="${order.getOrderItems()}" var="oT">
-                                            <c:forEach items="${products}" var="p">
-                                                <c:if test="${oT.getIdProduct() == p.getID()}">
+                                        <c:forEach items="${sessionScope.order.getOrderItems()}" var="oT">
+
+                                            <c:forEach items="${requestScope.products}" var="p">
+                                                <c:if test="${p.getId() == oT.getIdProduct()}">
                                                     <tr>
                                                         <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a></td>
                                                         <td class="product_thumb"><a href="#"><img src="${p.getImgLink()}" alt=""></a></td>
                                                         <td class="product_name"><a href="#">${p.getName()}</a></td>
                                                         <td class="product-price">${p.getPrice()}</td>
-                                                        <td class="product_quantity"><input min="1" max="100" value="1" type="number">${oT.getQuantity()}</td>
+                                                        <td class="product_quantity" ><input  min="0" max="100" value="${oT.getQuantity()}" type="number" name="quantity" ></td>
                                                         <td class="product_total">${p.getPrice() * oT.getQuantity()}.00</td>
 
 
@@ -105,7 +106,7 @@
                                     </table>
                                 </div>
                                 <div class="cart_submit">
-                                    <button type="submit">Update cart</button>
+                                    <button type="button">Update cart</button>
                                 </div>
                             </div>
                         </div>
@@ -171,9 +172,15 @@
 
 
 
-
-
 <!-- all js here -->
 <jsp:include page="/WEB-INF/homepage/layout/js_footer.jsp"></jsp:include>
+<script>
+    function handleQuantityChange(idProduct, element){
+        let newQuantity = element.value;
+        console.log(newQuantity);
+        let url = "/cart?action=change-quantity&id=" + idProduct;
+        window.location.assign(url);
+    }
+</script>
 </body>
 </html>
