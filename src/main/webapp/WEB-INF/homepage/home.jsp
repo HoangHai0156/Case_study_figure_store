@@ -46,52 +46,28 @@
                 <div class="row pos_home">
                     <div class="col-lg-3 col-md-12">
                         <!--layere categorie"-->
-                        <div class="sidebar_widget shop_c">
-                            <div class="categorie__titile">
+                        <div class="d-flex align-items-start flex-column">
+                            <div class="sidebar_widget shop_c">
                                 <h4>Categories</h4>
+                                <form action="#">
+                                    <select name="idCategory" id="cate">
+                                        <option value="-1">All</option>
+                                        <c:forEach var="c" items="${categoryMap.keySet()}">
+                                            <option value="${c}">${categoryMap.get(c).getName()}</option>
+                                        </c:forEach>
+                                    </select>
+                                </form>
                             </div>
-                            <div class="layere_categorie">
-                                <ul>
-                                    <li>
-                                        <input id="acces" type="checkbox">
-                                        <label for="acces">Accessories<span>(1)</span></label>
-                                    </li>
-                                    <li>
-                                        <input id="dress" type="checkbox">
-                                        <label for="dress">Dresses <span>(2)</span></label>
-                                    </li>
-                                    <li>
-                                        <input id="tops" type="checkbox">
-                                        <label for="tops">Tops<span>(3)</span></label>
-                                    </li>
-                                    <li>
-                                        <input id="bag" type="checkbox">
-                                        <label for="bag">HandBags<span>(4)</span></label>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!--layere categorie end-->
-
-                        <!--color area start-->
-                        <div class="sidebar_widget color">
-                            <h2>Color</h2>
-                            <div class="widget_color">
-                                <ul>
-
-                                    <li><a href="#">Black <span>(10)</span></a></li>
-
-                                    <li><a href="#">Orange <span>(12)</span></a></li>
-
-                                    <li> <a href="#">Blue <span>(14)</span></a></li>
-
-                                    <li><a href="#">Yellow <span>(15)</span></a></li>
-
-                                    <li><a href="#">pink <span>(16)</span></a></li>
-
-                                    <li><a href="#">green <span>(11)</span></a></li>
-
-                                </ul>
+                            <div class="sidebar_widget shop_c">
+                                <h4>Scale</h4>
+                                <form action="#">
+                                    <select name="scale" id="scale">
+                                        <option value="-1">All</option>
+                                        <c:forEach var="sc" items="${scales}">
+                                            <option value="${sc.getId()}">${sc.getScale()}</option>
+                                        </c:forEach>
+                                    </select>
+                                </form>
                             </div>
                         </div>
                         <!--color area end-->
@@ -119,50 +95,31 @@
                         <!--special product start-->
                         <div class="sidebar_widget special">
                             <div class="block_title">
-                                <h3>Special Products</h3>
+                                <h3 style="z-index: 1">Special Products</h3>
                             </div>
-                            <div class="special_product_inner mb-20">
-                                <div class="special_p_thumb">
-                                    <a href="single-product.html"><img src="/homepage_frontend/assets\img\cart\cart3.jpg" alt=""></a>
-                                </div>
-                                <div class="small_p_desc">
-                                    <div class="product_ratting">
-                                        <ul>
-                                            <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                            <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                            <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                            <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                            <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                        </ul>
+                            <c:forEach var="p" items="${specials}">
+                                <div class="special_product_inner mb-20 row">
+                                    <div class="special_p_thumb col-5">
+                                        <a href="/product?action=view&id=${p.getId()}"><img src="${p.getImgLink()}" alt=""></a>
                                     </div>
-                                    <h3><a href="single-product.html">Lorem ipsum dolor</a></h3>
-                                    <div class="special_product_proce">
-                                        <span class="old_price">$124.58</span>
-                                        <span class="new_price">$118.35</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="special_product_inner">
-                                <div class="special_p_thumb">
-                                    <a href="single-product.html"><img src="/homepage_frontend/assets\img\cart\cart18.jpg" alt=""></a>
-                                </div>
-                                <div class="small_p_desc">
-                                    <div class="product_ratting">
-                                        <ul>
-                                            <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                            <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                            <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                            <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                            <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                        </ul>
-                                    </div>
-                                    <h3><a href="single-product.html">Printed Summer</a></h3>
-                                    <div class="special_product_proce">
-                                        <span class="old_price">$124.58</span>
-                                        <span class="new_price">$118.35</span>
+                                    <div class="small_p_desc col-6">
+                                        <div class="product_ratting">
+                                            <ul>
+                                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-star"></i></a></li>
+                                            </ul>
+                                        </div>
+                                        <h3><a href="/product?action=view&id=${p.getId()}">${p.getName()}</a></h3>
+                                        <div class="special_product_proce">
+                                            <span class="old_price">$${p.getPrice() + 20}</span>
+                                            <span class="new_price">$${p.getPrice()}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </c:forEach>
                         </div>
                         <!--special product end-->
 
@@ -303,12 +260,23 @@
                             </div>
                             <div class="page_number">
                                 <span>Pages: </span>
-                                <ul>
-                                    <li>Previous</li>
-                                    <li class="current_number">1</li>
-                                    <li><a href="#">2</a></li>
-                                    <li>Next</li>
-                                </ul>
+                                <nav aria-label="Page navigation example">
+                                    <ul>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
                             </div>
                         </div>
                         <!--pagination style end-->

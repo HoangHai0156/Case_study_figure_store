@@ -10,6 +10,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <jsp:include page="/WEB-INF/homepage/layout/css_header.jsp"/>
     <meta name="description" content="">
+    <style>
+        p.badge{
+            font-size: 100%;
+        }
+    </style>
 </head>
 <body>
 <!-- Add your site or application content here -->
@@ -85,24 +90,24 @@
 
                             <div class="product_stock mb-20">
                                 <span> Studio </span>
-                                <p>${product.geteStudio().getName()}</p>
+                                <p class="badge badge-info ml-2">${product.geteStudio().getName()}</p>
                             </div>
 
                             <div class="product_stock mb-20">
                                 <span> Scale </span>
-                                <p>${product.geteScale().getScale()}</p>
+                                <p class="badge badge-info ml-2">${product.geteScale().getScale()}</p>
                             </div>
 
                             <div class="product_stock mb-20">
                                 <span> In stock </span>
-                                <p>${product.getLeftQuantity()} items</p>
+                                <p class="badge badge-info ml-2">${product.getLeftQuantity()} items</p>
                             </div>
 
                             <div class="product_stock mb-20">
                                 <span> Category </span>
                                 <c:forEach var="c" items="${categoryMap.keySet()}">
                                     <c:if test="${product.getIdCategory() == c}">
-                                        <p>${categoryMap.get(c).getName()}</p>
+                                        <p class="badge badge-info ml-2">${categoryMap.get(c).getName()}</p>
                                     </c:if>
                                 </c:forEach>
                             </div>

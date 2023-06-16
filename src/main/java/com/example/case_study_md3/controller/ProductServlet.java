@@ -33,13 +33,6 @@ public class ProductServlet extends HttpServlet {
         Map<Integer, Category> categoryMap = categoryService.getCategoryMap();
         List<Product> products = productService.findAll();
 
-//        Product product = new Product();
-//        for (Integer idC: categoryMap.keySet()){
-//            if (product.getIdCategory() == idC){
-//                categoryMap.get(idC).getName();
-//            }
-//        }
-
         String action = req.getParameter("action");
         if (action == null){
             action = "";
@@ -57,6 +50,10 @@ public class ProductServlet extends HttpServlet {
                 req.getRequestDispatcher("/WEB-INF/admin/product/view-product.jsp").forward(req,resp);
                 break;
             default:
+                List<Product> specials = productService.findSpecial();
+
+                req.setAttribute("scales",scales);
+                req.setAttribute("specials",specials);
                 req.setAttribute("products",products);
                 req.setAttribute("categoryMap",categoryMap);
                 req.getRequestDispatcher("/WEB-INF/homepage/home.jsp").forward(req,resp);
@@ -68,6 +65,7 @@ public class ProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
+
         Map<Integer, Category> categoryMap = categoryService.getCategoryMap();
         List<Product> products = productService.findAll();
         String action = req.getParameter("action");
@@ -87,7 +85,4 @@ public class ProductServlet extends HttpServlet {
     public void destroy() {
     }
 
-    public static void main(String[] args) {
-
-    }
 }

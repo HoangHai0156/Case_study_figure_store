@@ -10,12 +10,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductService extends DBContext {
+    private final String SELECT_2_SPECIAL = "select * from products\n" +
+            "order by leftQuantity desc\n" +
+            "limit 0, 2";
     private final String SELECT_ALL = "SELECT * FROM products where (`deleteAt` is null)";
     private final String INSERT_PRODUCT = "INSERT INTO `products` (`name`, `price`, `leftQuantity`, `createAt`," +
             " `scale`, `idCategory`, `description`, `imgLink`, `studio`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final String SELECT_BY_ID = "SELECT * FROM products where id = ? and `deleteAt` is null";
     private final String UPDATE_PRODUCT = "UPDATE `products` SET `name` = ?, `price` = ?, `leftQuantity` = ?, `scale` = ?, `idCategory` = ?, `description` = ?, `imgLink` = ?, `studio` = ? where id = ? and `deleteAt` is null";
     private final String DELETE_PRODUCT = "UPDATE `products` SET `deleteAt` = ? where id = ? and `deleteAt` is null";
+    private final String SELECT_ALL_ADVANCE = "select p.*,c.`name` as categoryName from products p \n" +
+            "join categories c on p.idCategory = c.id\n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?)\n" +
+            "order by %s %s\n" +
+            "limit ?, ?;";
+    private final String SELECT_ALL_ADVANCE_TOTAL = "select count(*) as total from products p \n" +
+            "join categories c on p.idCategory = c.id\n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?)\n";
+    private final String SELECT_ALL_ADVANCE_FILTERS = "select p.*,c.`name` as categoryName from products p \n" +
+            "join categories c on p.idCategory = c.id\n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.idCategory = ? and p.scale = ?\n" +
+            "order by %s %s\n" +
+            "limit ?, ?;";
+    private final String SELECT_ALL_ADVANCE_FILTERS_TOTAL = "select count(*) as total from products p \n" +
+            "join categories c on p.idCategory = c.id\n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.idCategory = ? and p.scale = ?\n";
+    private final String SELECT_ALL_ADVANCE_CFILTER = "select p.*,c.`name` as categoryName from products p \n" +
+            "join categories c on p.idCategory = c.id\n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.idCategory = ?\n" +
+            "order by %s %s\n" +
+            "limit ?, ?;";
+    private final String SELECT_ALL_ADVANCE_CFILTER_TOTAL = "select count(*) as total from products p \n" +
+            "join categories c on p.idCategory = c.id\n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.idCategory = ?\n";
+    private final String SELECT_ALL_ADVANCE_SFILTER = "select p.*,c.`name` as categoryName from products p \n" +
+            "join categories c on p.idCategory = c.id\n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.scale = ?\n" +
+            "order by %s %s\n" +
+            "limit ?, ?;";
+    private final String SELECT_ALL_ADVANCE_SFILTER_TOTAL = "select count(*) as total from products p \n" +
+            "join categories c on p.idCategory = c.id\n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.scale = ?\n";
     public List<Product> findAll(){
         List<Product> products = new ArrayList<>();
         try(Connection connection = getConnection();
@@ -32,6 +67,26 @@ public class ProductService extends DBContext {
         }catch (SQLException sqlException){
             printSQLException(sqlException);
         }
+        return products;
+    }
+    public List<Product> findSpecial(){
+        List<Product> products = new ArrayList<>();
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_2_SPECIAL)) {
+
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                Product product = getProductFromRs(rs);
+                products.add(product);
+            }
+
+        }catch (SQLException sqlException){
+            printSQLException(sqlException);
+        }
+        return products;
+    }
+    public List<Product> findAllAdvance(){
+        List<Product> products = new ArrayList<>();
         return products;
     }
 
