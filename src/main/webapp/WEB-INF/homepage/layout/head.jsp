@@ -50,7 +50,7 @@
       <!--logo start-->
       <div class="col-lg-3 col-md-3">
         <div class="logo">
-          <a href="index.html"><img src="/homepage_frontend/assets\img\logo\logo.jpg.png" alt=""></a>
+          <a href="/"><img src="/homepage_frontend/assets\img\logo\logo.jpg.png" alt=""></a>
         </div>
       </div>
       <!--logo end-->
@@ -69,7 +69,7 @@
             <div class="mini_cart">
               <c:forEach items="${requestScope.order.getOrderItems()}" var="oT">
 
-                <c:forEach items="${requestScope.products}" var="p">
+                <c:forEach items="${requestScope.allProducts}" var="p">
                   <c:if test="${p.getId() == oT.getIdProduct()}">
                     <div class="cart_item">
                       <div class="cart_img">
@@ -116,12 +116,12 @@
           <div class="main_menu d-none d-lg-block">
             <nav>
               <ul>
-                <li class="active"><a href="index.html">Home</a>
+                <li class="active"><a href="/">Home</a>
                   <div class="mega_menu jewelry">
                     <div class="mega_items jewelry">
                       <ul>
-                        <li><a href="index.html">Home 1</a></li>
-                        <li><a href="index-2.html">Home 2</a></li>
+                        <li><a href="/">Home 1</a></li>
+                        <li><a href="/">Home 2</a></li>
                       </ul>
                     </div>
                   </div>

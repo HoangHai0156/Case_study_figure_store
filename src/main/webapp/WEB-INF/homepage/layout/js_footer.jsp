@@ -5,3 +5,5 @@
 <script src="/homepage_frontend/assets\js\ajax-mail.js"></script>
 <script src="/homepage_frontend/assets\js\plugins.js"></script>
 <script src="/homepage_frontend/assets\js\main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.11/sweetalert2.all.min.js"
+        integrity="sha512-sZf2OK8od53udtGBBdzSqg3BGjjL3BpM5K4dQgB0mmhumO07aWOLmBK917w5cbdLWPfILjJzKgJcYm+neEBUDw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

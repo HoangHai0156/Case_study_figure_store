@@ -17,6 +17,18 @@ public class OrderService extends DBContext{
     private static final String SELECT_ORDER_BY_ID = "SELECT * FROM orders  where id = ?;";
     private static final String UPDATE_ORDER = "UPDATE `orders` SET `idUser` = ?, `isPaid` = ?, `subTotal` = ?, `discount` = ? WHERE (`id` = ?);";
     private static final String DELETE_ORDER = "DELETE FROM `orders` WHERE (`id` = ?);";
+    private static final String ORDER_SET_PAID = "UPDATE `orders` SET `isPaid` = true WHERE (`id` = ?);";
+    public void setOrderPaid(int id){
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(ORDER_SET_PAID)) {
+
+            preparedStatement.setInt(1,id);
+            preparedStatement.executeUpdate();
+
+        }catch (SQLException sqlException){
+            printSQLException(sqlException);
+        }
+    }
     public List<Order> findAllPaidOrders(){
         List<Order> orders = new ArrayList<>();
         try {
@@ -115,6 +127,7 @@ public class OrderService extends DBContext{
             Connection connection = getConnection();
             PreparedStatement ps = connection.prepareStatement(SELECT_ORDER_BY_ID);
 
+            ps.setInt(1,id);
             System.out.println("Find Order by ID " + ps);
             ResultSet rs = ps.executeQuery();
 

@@ -13,7 +13,7 @@ public class OrderItemService  extends DBContext{
     private static final String SELECT_ORDERITEM_BY_IDORDER_IDPRODUCT = "SELECT * FROM orderitems where idOrder = ? and idProduct = ?;";
     private static final String SAVE_ORDERITEM = "INSERT INTO `figure_store`.`orderitems` (`idOrder`, `idProduct`, `quantity`, `total`) VALUES (?, ?, ?, ?);\n";
     private static final String UPDATE_ORDERITEM = "UPDATE `figure_store`.`orderitems` SET  `idProduct` = ?, `quantity` = ?, `total` = ? WHERE (`id` = ?);\n";
-    private static final String DELETE_ORDERITEM = "DELETE FROM orderitems WHERE (`id` = ?);";
+    private static final String DELETE_ORDERITEM = "DELETE FROM orderitems WHERE `idOrder` = ? and `idProduct` = ?;";
 
     public List<OrderItem> findAllByIdOrder(int id){
         List<OrderItem> orderItems = new ArrayList<>();
@@ -98,12 +98,13 @@ public class OrderItemService  extends DBContext{
             printSQLException(e);
         }
     }
-    public void remove (int id){
+    public void remove (int idOrder, int idProduct){
         try {
             Connection connection = getConnection();
             PreparedStatement ps = connection.prepareStatement(DELETE_ORDERITEM);
 
-            ps.setLong(1, id);
+            ps.setInt(1, idOrder);
+            ps.setInt(2,idProduct);
             System.out.println("Remove orderItem" + ps);
             ps.executeUpdate();
             connection.close();

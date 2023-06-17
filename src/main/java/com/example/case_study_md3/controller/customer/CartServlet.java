@@ -9,10 +9,13 @@ import com.example.case_study_md3.service.OrderService;
 import com.example.case_study_md3.service.ProductService;
 import com.example.case_study_md3.service.UserService;
 import com.example.case_study_md3.utils.Config;
+import com.example.case_study_md3.utils.ValidateUtils;
 
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -45,9 +48,119 @@ public class CartServlet extends HttpServlet {
             case "change":
                 changeQuantity(request, response, action, session);
                 break;
+            case "check":
+                showCheckout(request, response, session);
+                break;
             default:
                 showCart(request, response, session);
                 break;
+        }
+    }
+
+    private void showCheckout(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException, ServletException {
+        User user = (User) session.getAttribute("user");
+        if (user == null){
+            response.sendRedirect("/user?action=login");
+            return;
+        }
+        Order unpaidOrder = orderService.findUserUnPaidOrder(user.getId());
+        List<Product> allProducts = productService.findAll();
+        List<OrderItem> orderItems = orderItemService.findAllByIdOrder(unpaidOrder.getId());
+        unpaidOrder.setOrderItems(orderItems);
+
+        request.setAttribute("order",unpaidOrder);
+        request.setAttribute("products",allProducts);
+        request.getRequestDispatcher(Config.HOMEPAGE+"checkout.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        HttpSession session = request.getSession();
+        if (action == null) {
+            action = "";
+        }
+        switch (action) {
+            case "remove":
+                removeCartItem(request, response);
+                break;
+            case "check":
+                doCheckout(request, response, session);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void doCheckout(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException, ServletException {
+        Map<String, String> errorsMap = new HashMap<>();
+        User user = (User) session.getAttribute("user");
+        if (user == null){
+            response.sendRedirect("/user?action=login");
+            return;
+        }
+        Order unpaidOrder = orderService.findUserUnPaidOrder(user.getId());
+        List<OrderItem> orderItems = orderItemService.findAllByIdOrder(unpaidOrder.getId());
+
+        updateErrorsInput(request, errorsMap);
+
+        if (errorsMap.isEmpty()){
+            updateProductLQuantity(orderItems);
+
+            orderService.setOrderPaid(unpaidOrder.getId());
+            String successMess = "Thanh toán thành công! Bạn đã bị scam tiền. Tiếp tục shopping để bị scam ^^";
+
+            request.setAttribute("successMess",successMess);
+        }else {
+            List<Product> allProducts = productService.findAll();
+            unpaidOrder.setOrderItems(orderItems);
+
+            request.setAttribute("errorsMap",errorsMap);
+            request.setAttribute("order",unpaidOrder);
+            request.setAttribute("products",allProducts);
+        }
+
+        request.getRequestDispatcher(Config.HOMEPAGE+"checkout.jsp").forward(request, response);
+    }
+
+    private void removeCartItem(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int idOrder = Integer.parseInt(request.getParameter("idOrder"));
+        int idProduct = Integer.parseInt(request.getParameter("idProduct"));
+        orderItemService.remove(idOrder,idProduct);
+        Order order = orderService.findOrderById(idOrder);
+        updateOrderSubTotal(order);
+
+        response.sendRedirect("/cart");
+    }
+
+    private void updateProductLQuantity(List<OrderItem> orderItems) {
+        for (OrderItem o : orderItems){
+            Product product = productService.findProduct(o.getIdProduct());
+            int newQuantity = product.getLeftQuantity() - o.getQuantity();
+            product.setLeftQuantity(newQuantity);
+            productService.update(o.getIdProduct(),product);
+        }
+    }
+
+    private static void updateErrorsInput(HttpServletRequest request, Map<String, String> errorsMap) {
+        String fullName = request.getParameter("fullName");
+        if (!ValidateUtils.isNameValid(fullName)) {
+            errorsMap.put("nameInvalid","Tên không hợp lệ. Tên phải từ 8-30 ký tự và bđ là chữ cái");
+        }
+
+        String address = request.getParameter("address");
+        if (!ValidateUtils.isAddressValid(address)){
+            errorsMap.put("addressInvalid","Địa chỉ không hợp lệ");
+        }
+
+        String phone = request.getParameter("phone");
+        if (!ValidateUtils.isPhoneValid(phone)){
+            errorsMap.put("phoneInvalid","Phone không hợp lệ");
+        }
+
+        String email = request.getParameter("email");
+        if (!ValidateUtils.isEmailValid(email)){
+            errorsMap.put("emailInvalid","Email không hợp lệ");
         }
     }
 
@@ -61,9 +174,11 @@ public class CartServlet extends HttpServlet {
         if (user != null){
             Order unpaidOrder = orderService.findUserUnPaidOrder(user.getId());
             List<Product> products = productService.findAll();
-            List<OrderItem> orderItems = orderItemService.findAllByIdOrder(unpaidOrder.getId());
-            unpaidOrder.setOrderItems(orderItems);
-
+            List<OrderItem> orderItems = null;
+            if (unpaidOrder != null){
+                orderItems = orderItemService.findAllByIdOrder(unpaidOrder.getId());
+                unpaidOrder.setOrderItems(orderItems);
+            }
             request.setAttribute("order",unpaidOrder);
             request.setAttribute("products",products);
         }
@@ -75,6 +190,12 @@ public class CartServlet extends HttpServlet {
 
         List<Product> allProducts = productService.findAll();
         int quantity = Integer.parseInt(request.getParameter("quantity"));
+
+        if (quantity < 0){
+            response.sendRedirect("/cart");
+            return;
+        }
+
         User user = (User) session.getAttribute("user");
         if (user == null){
             response.sendRedirect("/user?action=login");
@@ -82,56 +203,6 @@ public class CartServlet extends HttpServlet {
         }
         Order unpaidOrder = orderService.findUserUnPaidOrder(user.getId());
         String cartMess;
-
-
-        /** Hiển thị ra cart chưa cần
-
-        User user = (User) request.getSession().getAttribute("user");
-        int idUser = user.getId();
-         idOrder
-
-        int quantity = 1;
-        if (action.equals("change-quantity")) {
-            quantity = Integer.parseInt(request.getParameter("quantity"));
-        }
-
-        Order order = null;
-        if (request.getSession().getAttribute("order") != null) {
-            order = (Order) request.getSession().getAttribute("order");
-        } else {
-            order = new Order();
-        }
-
-        if (order.getOrderItems() == null) {
-            List<OrderItem> orderItems = new ArrayList<>();
-            OrderItem orderItem = new OrderItem(idProduct, 1) ;
-            orderItems.add(orderItem);
-
-            order.setOrderItems(orderItems);
-        } else {
-            boolean check = checkIdProductExistOrder(idProduct, order);
-            if (check) {
-                updateProductInOrder(idProduct, quantity + 1, order);
-            } else {
-                addProductToOrder(idProduct, quantity, order);
-            }
-        }
-
-        List<Product> products = new ArrayList<>();
-//        products.add(product);
-        for (int i = 0; i < order.getOrderItems().size(); i++){
-            OrderItem orderItem = order.getOrderItems().get(i);
-            Product p = productService.findProduct(orderItem.getIdProduct());
-            products.add(p);
-        }
-
-        // Chuyển thông tin từ order (chưa có hình ảnh, tên sp) sang cart (hình ảnh, tên sp)
-        request.setAttribute("products", products);
-        HttpSession session = request.getSession();
-        session.setAttribute("order", order);
-
-        request.getRequestDispatcher("/WEB-INF/homepage/cart.jsp").forward(request, response);
-         **/
 
         if (quantity > product.getLeftQuantity() || quantity > 10){
             cartMess = "Số lượng muốn mua không hợp lệ !";
@@ -161,6 +232,16 @@ public class CartServlet extends HttpServlet {
                     if (action.equals("add")){
                         quantity = orderItem.getQuantity() + quantity;
                     }
+
+                    if (quantity == 0){
+                        orderItemService.remove(unpaidOrder.getId(),idProduct);
+                        Order order = orderService.findOrderById(unpaidOrder.getId());
+                        updateOrderSubTotal(order);
+
+                        response.sendRedirect("/cart");
+                        return;
+                    }
+
                     if (quantity > 10){
                         cartMess = "Số lượng muốn mua không hợp lệ !";
 
@@ -169,6 +250,7 @@ public class CartServlet extends HttpServlet {
                         request.getRequestDispatcher(Config.ADMIN_TO_PRODUCT+"view-product.jsp").forward(request,response);
                         return;
                     }
+
                     orderItem.setQuantity(quantity);
                     orderItem.setTotal(quantity * product.getPrice());
                     orderItemService.update(orderItem.getId(), orderItem);
@@ -179,9 +261,7 @@ public class CartServlet extends HttpServlet {
                     orderItemService.save(orderItem);
 
                 }
-                float subTotal = getSubTotal(unpaidOrder);
-                unpaidOrder.setSubTotal(subTotal);
-                orderService.update(unpaidOrder.getId(), unpaidOrder);
+                updateOrderSubTotal(unpaidOrder);
             }
 
             List<OrderItem> orderItems = orderItemService.findAllByIdOrder(unpaidOrder.getId());
@@ -192,6 +272,12 @@ public class CartServlet extends HttpServlet {
             request.getRequestDispatcher(Config.HOMEPAGE+"cart.jsp").forward(request,response);
         }
 
+    }
+
+    private void updateOrderSubTotal(Order unpaidOrder) {
+        float subTotal = getSubTotal(unpaidOrder);
+        unpaidOrder.setSubTotal(subTotal);
+        orderService.update(unpaidOrder.getId(), unpaidOrder);
     }
 
     private static void setNullOrderItem(int idProduct, Product product, int quantity, Order unpaidOrder, OrderItem orderItem) {

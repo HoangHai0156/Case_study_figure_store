@@ -1,10 +1,11 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html class="no-js" lang="zxx">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Coron-cart</title>
+    <title>Figure Store-cart</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
@@ -63,44 +64,25 @@
                                         </thead>
                                         <tbody>
                                         <c:forEach items="${requestScope.order.getOrderItems()}" var="oT">
-
                                             <c:forEach items="${requestScope.products}" var="p">
                                                 <c:if test="${p.getId() == oT.getIdProduct()}">
+
                                                     <tr>
-                                                        <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a></td>
-                                                        <td class="product_thumb"><a href="#"><img src="${p.getImgLink()}" alt=""></a></td>
-                                                        <td class="product_name"><a href="#">${p.getName()}</a></td>
-                                                        <td class="product-price">${p.getPrice()}</td>
-                                                        <td class="product_quantity" ><input onchange="handleQuantityChange(${p.getId()},this.value)" min="1" max="10" value="${oT.getQuantity()}" type="number" name="quantity" ></td>
-                                                        <td class="product_total">${p.getPrice() * oT.getQuantity()}</td>
+                                                        <form action="/cart?action=remove" method="post">
+                                                            <input name="idOrder" value="${requestScope.order.getId()}" hidden="hidden">
+                                                            <input name="idProduct" value="${oT.getIdProduct()}" hidden="hidden">
+                                                            <td class="product_remove"><button class="btn btn-danger rounded-lg fa fa-trash-o" type="submit"></button></td>
+                                                            <td class="product_thumb"><a href="#"><img src="${p.getImgLink()}" alt=""></a></td>
+                                                            <td class="product_name"><a href="#">${p.getName()}</a></td>
+                                                            <td class="product-price">${p.getPrice()}</td>
+                                                            <td class="product_quantity" ><input onchange="handleQuantityChange(${p.getId()},this.value)" min="0" max="10" value="${oT.getQuantity()}" type="number" name="quantity" ></td>
+                                                            <td class="product_total">${p.getPrice() * oT.getQuantity()}</td>
+                                                        </form>
                                                     </tr>
+
                                                 </c:if>
                                             </c:forEach>
-
                                         </c:forEach>
-                                        <%--
-                                               <tr>
-                                                   <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a></td>
-                                                   <td class="product_thumb"><a href="#"><img src="assets\img\cart\cart18.jpg" alt=""></a></td>
-                                                   <td class="product_name"><a href="#">Handbags justo</a></td>
-                                                   <td class="product-price">£90.00</td>
-                                                   <td class="product_quantity"><input min="0" max="100" value="1" type="number"></td>
-                                                   <td class="product_total">£180.00</td>
-
-
-                                               </tr>
-                                               <tr>
-                                                   <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a></td>
-                                                   <td class="product_thumb"><a href="#"><img src="assets\img\cart\cart19.jpg" alt=""></a></td>
-                                                   <td class="product_name"><a href="#">Handbag elit</a></td>
-                                                   <td class="product-price">£80.00</td>
-                                                   <td class="product_quantity"><input min="0" max="100" value="1" type="number"></td>
-                                                   <td class="product_total">£160.00</td>
-
-
-                                               </tr>
-                                             --%>
-
                                         </tbody>
                                     </table>
                                 </div>
@@ -146,7 +128,7 @@
                                             <p class="cart_amount">$${requestScope.order.getSubTotal() - (requestScope.order.getSubTotal() * requestScope.order.getDiscount() / 100) + 10}</p>
                                         </div>
                                         <div class="checkout_btn">
-                                            <a href="#">Proceed to Checkout</a>
+                                            <a href="/cart?action=check">Proceed to Checkout</a>
                                         </div>
                                     </div>
                                 </div>

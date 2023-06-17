@@ -2,6 +2,7 @@ package com.example.case_study_md3.controller.customer;
 
 import com.example.case_study_md3.model.*;
 import com.example.case_study_md3.service.CategoryService;
+import com.example.case_study_md3.service.OrderItemService;
 import com.example.case_study_md3.service.OrderService;
 import com.example.case_study_md3.service.ProductService;
 import com.example.case_study_md3.utils.Config;
@@ -18,6 +19,7 @@ public class ProductServlet extends HttpServlet {
     private ProductService productService = new ProductService();
     private CategoryService categoryService = new CategoryService();
     private OrderService orderService = new OrderService();
+    private OrderItemService orderItemService = new OrderItemService();
 
     public void init() {
 
@@ -32,13 +34,18 @@ public class ProductServlet extends HttpServlet {
 
         EScale[] scales = EScale.values();
         Map<Integer, Category> categoryMap = categoryService.getCategoryMap();
-//        List<Product> allProducts = productService.findAll();
+        List<Product> allProducts = productService.findAll();
         List<Product> products = productService.findAllAdvance(pageable);
 
         User user = (User) req.getSession().getAttribute("user");
         Order unpaidOrder = new Order();
+        List<OrderItem> orderItems = null;
         if (user != null){
             unpaidOrder = orderService.findUserUnPaidOrder(user.getId());
+            if (unpaidOrder != null){
+                orderItems = orderItemService.findAllByIdOrder(unpaidOrder.getId());
+                unpaidOrder.setOrderItems(orderItems);
+            }
         }
 
         String action = req.getParameter("action");
@@ -50,6 +57,7 @@ public class ProductServlet extends HttpServlet {
                 int id = Integer.parseInt(req.getParameter("id"));
                 Product product = productService.findProduct(id);
 
+                req.setAttribute("allProducts",allProducts);
                 req.setAttribute("products",products);
                 req.setAttribute("order",unpaidOrder);
                 req.setAttribute("scales",scales);
@@ -63,6 +71,7 @@ public class ProductServlet extends HttpServlet {
                 List<Product> specials = productService.findSpecial();
 
                 //allProducts là tất cả product, kích thước không bị ảnh hưởng bởi pageable. Dùng cho head, hiện mini cart
+                req.setAttribute("allProducts",allProducts);
                 req.setAttribute("order",unpaidOrder);
                 req.setAttribute("pageable", pageable);
                 req.setAttribute("scales",scales);
