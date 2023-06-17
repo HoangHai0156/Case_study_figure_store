@@ -29,9 +29,10 @@ public class ProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
+
         ProductPageable pageable = new ProductPageable();
         inputProductPageable(req, pageable);
-
+        System.out.println("........................." + pageable.getScale());
         EScale[] scales = EScale.values();
         Map<Integer, Category> categoryMap = categoryService.getCategoryMap();
         List<Product> allProducts = productService.findAll();
@@ -114,7 +115,7 @@ public class ProductServlet extends HttpServlet {
         }
         if (request.getParameter("limit") != null) {
             int limit = Integer.parseInt(request.getParameter("limit"));
-            pageable.setPage(limit);
+            pageable.setLimit(limit);
         }
         if (request.getParameter("sortfield") != null) {
             String sortField = request.getParameter("sortfield");
@@ -132,7 +133,6 @@ public class ProductServlet extends HttpServlet {
             String scale = request.getParameter("scale");
             pageable.setScale(scale);
         }
-
     }
 
     public void destroy() {

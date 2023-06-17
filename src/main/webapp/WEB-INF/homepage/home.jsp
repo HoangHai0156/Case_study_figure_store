@@ -49,28 +49,25 @@
                         <div class="d-flex align-items-start flex-column">
                             <div class="sidebar_widget shop_c">
                                 <h4>Categories</h4>
-                                <form action="/product?action=search" method="get">
-<%--                                    sortfield, order, kw, category--%>
-                                    <select name="category" id="cate">
-<%--                                        onchane--%>
-<%--                                        onchange="handleCategoryChange('name', '${pageable.getOrder()}', '${pageable.getKw()}', ${pageable.idCategory()} )"--%>
+                                <form action="" method="get" name="category-form">
+                                    <select name="category" id="cate" onchange="handleCategoryChange('${pageable.getKw()}')"   >
                                         <option value="-1">All</option>
                                         <c:forEach var="c" items="${categoryMap.keySet()}">
                                             <option
                                                     <c:if test="${c == requestScope.pageable.getIdCategory()}">selected</c:if>
-                                                    value="${c}">${categoryMap.get(c).getName()}</option>
+                                                    value="${c}"}>${categoryMap.get(c).getName()}</option>
                                         </c:forEach>
                                     </select>
                                 </form>
                             </div>
                             <div class="sidebar_widget shop_c">
                                 <h4>Scale</h4>
-                                <form action="#">
-                                    <select name="scale" id="scale">
+                                <form action="" name="scales-form">
+                                    <select name="scale" id="scale" onchange="submitScales()">
                                         <option value="all">All</option>
                                         <c:forEach var="sc" items="${scales}">
                                             <option
-                                                    <c:if test="${sc.equals(requestScope.pageable.getScale())}">selected</c:if>
+                                                    <c:if test="${sc.getScale().equals(requestScope.pageable.getScale())}">selected</c:if>
                                                     value="${sc.getScale()}">${sc.getScale()}</option>
                                         </c:forEach>
                                     </select>
@@ -154,18 +151,13 @@
                             </div>
 
                             <div class="select_option">
-                                <form action="#">
+                                <form action="" name="sortfield-form">
                                     <label>Sort By</label>
-                                    <select name="orderby" id="short">
-                                        <option selected="" value="1">Position</option>
-                                        <option value="1">Price: Lowest</option>
-                                        <option value="1">Price: Highest</option>
-                                        <option value="1">Product Name:Z</option>
-                                        <option value="1">Sort by price:low</option>
-                                        <option value="1">Product Name: Z</option>
-                                        <option value="1">In stock</option>
-                                        <option value="1">Product Name: A</option>
-                                        <option value="1">In stock</option>
+                                    <select name="sortfield" id="short" onchange="handleSortAndFilter()">
+                                        <option value="price">Price: Increase</option>
+                                        <option value="price">Price: Decrease</option>
+                                        <option value="name">Product Name:Z</option>
+                                        <option value="name">Product Name: A</option>
                                     </select>
                                 </form>
                             </div>
@@ -257,7 +249,7 @@
                             <div class="item_page">
                                 <form action="#">
                                     <label for="page_select">show</label>
-                                    <select id="page_select">
+                                    <select id="page_select" name="limit">
                                         <c:forEach var="limit" begin="1" end="10">
                                             <option value="${limit}">${limit}</option>
                                         </c:forEach>
@@ -331,10 +323,24 @@
 <!-- all js here -->
 <jsp:include page="/WEB-INF/homepage/layout/js_footer.jsp"/>
 <script>
-    function handleCategoryChange(sortfield, order, kw, idCategory) {
-        //http://localhost:8080/product?sortfield=name&order=asc&kw=silve&category=-1&page=1
-        window.location.href = "/product?sortfield=" + sortfield + "&order=" + order + "&kw=" + kw + "&category=" + idCategory;
+
+
+    function handleCategoryChange(kw) {
+        let idCategory = document.getElementById('cate').value;
+        window.location.href = '/product?&kw=' + kw + '&category=' + idCategory;
+
+        // document.forms["category-form"].submit();
+
     }
+    function handleSortAndFilter(){
+        document.forms["sortfield-form"].submit();
+    }
+    function submitScales(){
+        document.forms["scales-form"].submit();
+    }
+
+// '/product?sortfield=' + sortfield + '&order=' + 'asc' + '&kw=' + kw + '&category=' + idCategory + '&scale=' + '1:10' + '&page=' + page + '&limit=' + lm;
+
 </script>
 </body>
 </html>

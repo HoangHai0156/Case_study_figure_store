@@ -54,13 +54,13 @@ public class ProductService extends DBContext {
             "join categories c on p.idCategory = c.id \n" +
             "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.scale = ? \n";
     private final String SELECT_ALL_PRODUCT_ADVANCE = "select p.*,c.`name` as categoryName from products p \n" +
-            "join categories c on p.idCategory = c.id \n" +
-            "where (p.`name` like ? or p.price like ?  or p.`description` like ? or p.studio like ?) and p.`deleteAt` is null \n" +
+            "join categories c on (p.idCategory = c.id) \n" +
+            "where (p.`name` like ? or p.price like ? or  p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and (p.scale like ? and p.`deleteAt` is null) \n" +
             "order by %s %s \n" +
             "limit ?, ?;";
     private final String SELECT_ALL_PRODUCT_ADVANCE_COUNT_TOTAL = "select count(*) as total from products p \n" +
-            "join categories c on p.idCategory = c.id \n" +
-            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and p.`deleteAt` is null \n";
+            "join categories c on (p.idCategory = c.id) \n" +
+            "where (p.`name` like ? or p.price like ? or p.leftQuantity like ? or p.`description` like ? or p.studio like ?) and (p.scale like ? and p.`deleteAt` is null) \n";
     private final String SELECT_ALL_PRODUCT_FILTER_BY_CATEGORY = "select p.*,c.`name` as categoryName from products p \n" +
             "join categories c on p.idCategory = c.id \n" +
             "where (p.`name` like ? or p.price like ?  or p.`description` like ? or p.studio like ?) and (p.idCategory = ?  and p.`deleteAt` is null) \n" +
@@ -166,7 +166,6 @@ public class ProductService extends DBContext {
             pageable.setTotalPage((int)Math.ceil(total * 1.0 / pageable.getLimit()));
         }
     }
-
     private void getAllProduct(Connection connection, List<Product> products, ProductPageable pageable) throws SQLException {
         String sql = "";
         sql = String.format(SELECT_ALL_PRODUCT_ADVANCE, pageable.getSortField(), pageable.getOrder());
@@ -175,8 +174,15 @@ public class ProductService extends DBContext {
         ps.setString(2, "%" + pageable.getKw() + "%");
         ps.setString(3, "%" + pageable.getKw() + "%");
         ps.setString(4, "%" + pageable.getKw() + "%");
-        ps.setInt(5, (pageable.getPage() - 1) * pageable.getLimit());
-        ps.setInt(6, pageable.getLimit());
+        ps.setString(5, "%" + pageable.getKw() + "%");
+        if (pageable.getScale().equals("all")) {
+            ps.setString(6, "%%"); //scale
+        } else {
+            ps.setString(6, "%" + pageable.getScale() + "%"); //scale
+
+        }
+        ps.setInt(7, (pageable.getPage() - 1) * pageable.getLimit());
+        ps.setInt(8, pageable.getLimit());
         System.out.println("Funtion find advance " + ps);
 
         ResultSet rs = ps.executeQuery();
@@ -192,6 +198,8 @@ public class ProductService extends DBContext {
         ps.setString(3, "%" + pageable.getKw() + "%");
         ps.setString(4, "%" + pageable.getKw() + "%");
         ps.setString(5, "%" + pageable.getKw() + "%");
+        ps.setString(6, "%" + pageable.getKw() + "%"); //scale
+
 
         rs = ps.executeQuery();
         while (rs.next()) {
