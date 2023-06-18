@@ -65,6 +65,7 @@ public class UserServlet extends HttpServlet {
 
             req.setAttribute("orders",orders);
             req.getRequestDispatcher("/WEB-INF/homepage/user-account.jsp").forward(req, resp);
+
         } else {
             resp.sendRedirect("/user?action=login");
 //            req.getRequestDispatcher("/WEB-INF/homepage/signIn.jsp").forward(req, resp);
@@ -96,11 +97,36 @@ public class UserServlet extends HttpServlet {
             case "signup":
                 signup(req, resp);
                 break;
-            case "myAccount":
+            case "updateInfo":
                 updateInfo(req, resp);
+                break;
+            case "changePass":
+                changePass(req, resp);
                 break;
             default:
                 break;
+        }
+    }
+
+    private void changePass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<String> errorsP = new ArrayList<>();
+        String password = req.getParameter("password");
+        String re_pass = req.getParameter("confirm-password");
+        if (!password.equals(re_pass)) {
+            errorsP.add("Mật khẩu không trùng khớp. Hãy nhập lại");
+            req.setAttribute("errorsP", errorsP);
+            req.getRequestDispatcher("/WEB-INF/homepage/user-account.jsp").forward(req, resp);
+        } else {
+            HttpSession session = req.getSession();
+            User user = (User) session.getAttribute("user");
+
+            user.setPassword(password);
+            userService.update(user.getId(), user);
+//            req.setAttribute("messageP", "Đổi mật khẩu thành công");
+            session.setAttribute("messageP", "Đổi mật khẩu thành công");
+//            req.getRequestDispatcher("/WEB-INF/homepage/user-account.jsp").forward(req, resp);
+            String redirectURL = req.getContextPath() + "/user?action=myAccount&scrollTo=address";
+            resp.sendRedirect(redirectURL);
         }
     }
 
@@ -201,6 +227,7 @@ public class UserServlet extends HttpServlet {
         List<String> errors = new ArrayList<>();
         String email = req.getParameter("email");
         String password = req.getParameter("password");
+        String remember = req.getParameter("remember");
         User user = userService.checkUser(email, password);
         if (user == null) {
             errors.add("Email hoặc password không đúng");
@@ -209,7 +236,21 @@ public class UserServlet extends HttpServlet {
         } else {
             HttpSession session = req.getSession();
             session.setAttribute("user", user);
-//            req.getRequestDispatcher("/product").forward(req, resp);
+            Cookie emailC = new Cookie("email", email);
+            Cookie passC = new Cookie("pass", password);
+            Cookie rem = new Cookie("remember", remember);
+            if (remember != null) {
+                emailC.setMaxAge(60 * 60);
+                passC.setMaxAge(60 * 60);
+                rem.setMaxAge(60 * 60);
+            } else {
+                emailC.setMaxAge(0);
+                passC.setMaxAge(0);
+                rem.setMaxAge(0);
+            }
+            resp.addCookie(emailC);
+            resp.addCookie(passC);
+            resp.addCookie(rem);
             resp.sendRedirect("/product");
         }
     }

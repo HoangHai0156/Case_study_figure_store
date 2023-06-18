@@ -44,21 +44,21 @@
                             </c:if>
                             <div class="form-group mb-3">
                                 <label for="emailaddress">Email Address :</label>
-                                <input name="email" class="form-control" type="email" id="emailaddress" required="" placeholder="john@deo.com">
+                                <input name="email" class="form-control" type="email" value="${cookie.email.value}" id="emailaddress" required="" placeholder="john@deo.com">
                             </div>
 
                             <div class="form-group mb-3">
                                 <label for="password">Password :</label>
-                                <input name="password" class="form-control" type="password" required="" id="password" placeholder="Enter your password">
+                                <input name="password" class="form-control" type="password" value="${cookie.pass.value}" required="" id="password" placeholder="Enter your password">
                             </div>
 
                             <div class="form-group mb-4">
                                 <div class="checkbox checkbox-success">
-                                    <input id="remember" type="checkbox" checked="">
+                                    <input ${(cookie.rem.value eq 'ON')?"checked":""} name="remember" value="ON" id="remember" type="checkbox">
                                     <label for="remember">
                                         Remember me
                                     </label>
-                                    <a href="pages-recoverpw.html" class="text-muted float-right">Forgot your password?</a>
+
                                 </div>
                             </div>
 

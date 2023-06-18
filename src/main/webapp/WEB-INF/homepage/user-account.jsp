@@ -34,6 +34,7 @@
                         <div class="breadcrumb_content">
                             <ul>
                                 <li><a href="/">home</a></li>
+                                <li><a href="/product">home</a></li>
                                 <li><i class="fa fa-angle-right"></i></li>
                                 <li>my account</li>
                             </ul>
@@ -54,10 +55,9 @@
                                 <ul role="tablist" class="nav flex-column dashboard-list">
                                     <li><a href="#dashboard" data-toggle="tab" class="nav-link active">Dashboard</a></li>
                                     <li> <a href="#orders" data-toggle="tab" class="nav-link">Orders</a></li>
-                                    <li><a href="#downloads" data-toggle="tab" class="nav-link">Downloads</a></li>
-                                    <li><a href="#address" data-toggle="tab" class="nav-link">Addresses</a></li>
+                                    <li><a href="#address" data-toggle="tab" class="nav-link">Change password</a></li>
                                     <li><a href="#account-details" data-toggle="tab" class="nav-link">Account details</a></li>
-                                    <li><a href="login.html" class="nav-link">logout</a></li>
+                                    <li><a href="/user?action=logout" class="nav-link">logout</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -105,56 +105,47 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="downloads">
-                                    <h3>Downloads</h3>
-                                    <div class="coron_table table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th>Product</th>
-                                                <th>Downloads</th>
-                                                <th>Expires</th>
-                                                <th>Download</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td>Shopnovilla - Free Real Estate PSD Template</td>
-                                                <td>May 10, 2018</td>
-                                                <td><span class="danger">Expired</span></td>
-                                                <td><a href="#" class="view">Click Here To Download Your File</a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Organic - ecommerce html template</td>
-                                                <td>Sep 11, 2018</td>
-                                                <td>Never</td>
-                                                <td><a href="#" class="view">Click Here To Download Your File</a></td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
                                 <div class="tab-pane" id="address">
-                                    <p>The following addresses will be used on the checkout page by default.</p>
-                                    <h4 class="billing-address">Billing address</h4>
-                                    <a href="#" class="view">Edit</a>
-                                    <p><strong>Bobby Jackson</strong></p>
-                                    <address>
-                                        House #15<br>
-                                        Road #1<br>
-                                        Block #C <br>
-                                        Banasree <br>
-                                        Dhaka <br>
-                                        1212
-                                    </address>
-                                    <p>Bangladesh</p>
+                                    <form action="user?action=changePass" method="post" class="p-2">
+                                        <c:if test="${requestScope.errorsP != null}">
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    <c:forEach items="${requestScope.errorsP}" var="e">
+                                                        <li>${e}</li>
+                                                    </c:forEach>
+                                                </ul>
+                                            </div>
+                                        </c:if>
+
+                                        <div class="form-group mb-3 col-md-4">
+                                            <label for="password">Password :</label>
+                                            <input name="password" class="form-control" type="password" required="" id="password" placeholder="Enter your password">
+                                        </div>
+
+                                        <div class="form-group mb-3 col-md-4">
+                                            <label for="password">Confirm Password :</label>
+                                            <input name="confirm-password" class="form-control" type="password" required="" id="confirm-password" placeholder="Enter your password">
+                                        </div>
+
+                                        <div class="form-group row text-center mt-4 mb-4">
+                                            <div class="col-md-4">
+                                                <button class="btn btn-md btn-block btn-primary waves-effect waves-light" type="submit">Change</button>
+                                            </div>
+                                        </div>
+                                        <c:if test="${sessionScope.messageP != null}">
+                                            <div class="alert alert-success">
+                                                <strong>${sessionScope.messageP}</strong>
+                                            </div>
+                                        </c:if>
+
+                                    </form>
                                 </div>
                                 <div class="tab-pane fade" id="account-details">
                                     <h3>Account details </h3>
                                     <div class="login">
                                         <div class="login_form_container">
                                             <div class="account_login_form">
-                                                <form method="post">
+                                                <form action="user?action=updateInfo" method="post">
                                                     <c:if test="${requestScope.errors != null}">
                                                         <div class="alert alert-danger">
                                                             <ul>
@@ -172,12 +163,10 @@
                                                     <input type="text" name="phone" value="${sessionScope.user.phone}">
                                                     <label class="font-weight-bold">Email</label>
                                                     <input type="text" name="email" value="${sessionScope.user.email}">
-                                                    <label class="font-weight-bold">Password</label>
-                                                    <input type="password" name="password" value="${sessionScope.user.password}">
                                                     <label class="font-weight-bold">Birthdate</label>
                                                     <input type="text" placeholder="YYYY/MM/DD" name="birthday" value="<fmt:formatDate value="${sessionScope.user.dob}" pattern="yyyy-MM-dd"/>">
                                                     <div class="col-3">
-                                                        <button class="btn btn-md btn-block btn-primary waves-effect waves-light" type="submit">Save</button>
+                                                        <button class="btn btn-bordered-primary" type="submit">Save</button>
                                                     </div>
                                                 </form>
                                                 <c:if test="${requestScope.message != null}">
@@ -204,9 +193,33 @@
 <!--footer area start-->
 <jsp:include page="/WEB-INF/homepage/layout/foot.jsp"></jsp:include>
 <!--footer area end-->
+<script>
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
 
+    // Lắng nghe sự kiện tải trang
 
-
+    window.onload = function() {
+        var scrollToParam = getParameterByName('scrollTo');
+        if (scrollToParam === 'address') {
+            var accountDetailsLink = document.querySelector('a[href="#address"]');
+            if (accountDetailsLink) {
+                accountDetailsLink.click(); // Tự động click vào liên kết "Account details"
+                var accountDetailsElement = document.getElementById("address");
+                if (accountDetailsElement) {
+                    accountDetailsElement.scrollIntoView(); // Cuộn xuống phần tử "#account-details"
+                }
+            }
+        }
+    };
+</script>
 
 
 
