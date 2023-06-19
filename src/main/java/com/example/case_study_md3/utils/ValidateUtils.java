@@ -43,4 +43,22 @@ public class ValidateUtils {
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
     }
+    public static boolean isPrice(String price) {
+        REGEX = "^[1-9]\\d{2,3}(\\.\\d{1,2})?$";
+        Pattern pattern = Pattern.compile(REGEX);
+        Matcher matcher = pattern.matcher(price);
+        return matcher.matches();
+    }
+    public static boolean isQuantity(String quantity) {
+        REGEX = "^[1-9][0-9]{0,1}$";
+        Pattern pattern = Pattern.compile(REGEX);
+        Matcher matcher = pattern.matcher(quantity);
+        return matcher.matches();
+    }
+    public static boolean isLink(String link){
+        REGEX = "^(https:\\/\\/)?[a-zA-Z0-9-_./]{20,200}";
+        Pattern pattern = Pattern.compile(REGEX);
+        Matcher matcher = pattern.matcher(link);
+        return matcher.matches();
+    }
 }

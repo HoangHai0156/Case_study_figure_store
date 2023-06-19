@@ -30,6 +30,10 @@ public class ProductServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
 
+
+        ProductPageable pageable = new ProductPageable();
+        inputProductPageable(req, pageable);
+
         EScale[] scales = EScale.values();
         Map<Integer, Category> categoryMap = categoryService.getCategoryMap();
         List<Product> allProducts = productService.findAll();
@@ -113,7 +117,7 @@ public class ProductServlet extends HttpServlet {
                 break;
         }
     }
-    private void inputProductPageable(HttpServletRequest request, ProductPageable pageable) {
+    public void inputProductPageable(HttpServletRequest request, ProductPageable pageable) {
         if (request.getParameter("kw") != null) {
             String kw = request.getParameter("kw");
             pageable.setKw(kw);

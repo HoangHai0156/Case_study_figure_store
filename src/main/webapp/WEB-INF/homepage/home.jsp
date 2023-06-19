@@ -13,6 +13,7 @@
             height: 340px !important;
         }
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
 <!-- Add your site or application content here -->
@@ -150,6 +151,16 @@
                                     <option value="name" data-order='desc'>Product Name: Z-A</option>
                                     <option value="name" data-order='asc'>Product Name: A-Z</option>
                                 </select>
+                            <div class="select_option d-flex">
+                                <form action="" name="sortfield-form">
+                                    <label>Sort By</label>
+                                        <select name="sortfield" id="short" onchange="handleSortAndFilter()">
+                                            <option value="${pageable.getSortField()}">Price: Increase</option>
+                                            <option value="price">Price: Decrease</option>
+                                            <option value="name">Product Name:Z</option>
+                                            <option value="name">Product Name: A</option>
+                                        </select>
+                                </form>
                             </div>
                         </div>
                         <!--shop toolbar end-->
@@ -266,6 +277,7 @@
                                                 <c:otherwise>
                                                     <li class="page-item">
                                                         <a class="page-link" href="/product?page=${page}&limit=${requestScope.pageable.getLimit()}&kw=${requestScope.pageable.getKw()}&sortField=${requestScope.pageable.getSortField()}&order=${requestScope.pageable.getOrder()}&idCategory=${requestScope.pageable.getIdCategory()}&scale=${requestScope.pageable.getScale()}">${page}</a>
+                                                        <a class="page-link" href="/product?kw=${pageable.getKw()}&category=${pageable.getIdCategory()}&page=${page}">${page}</a>
                                                     </li>
                                                 </c:otherwise>
                                             </c:choose>
