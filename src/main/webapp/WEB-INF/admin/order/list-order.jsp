@@ -169,7 +169,6 @@
 
 <jsp:include page="/WEB-INF/admin/layout/footer_js.jsp"></jsp:include>
 
-
 </body>
 <grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>
 </html>

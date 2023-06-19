@@ -83,12 +83,12 @@ public class AdminProductServlet extends HttpServlet {
         actionSetAttribute(req);
 
         List<Product> allProducts = productService.findAll();
-        List<Product> products = productService.findAllAdvance(pageable);
+//        List<Product> products = productService.findAllAdvance(pageable);
 
 
 //        List<Product> products = productService.findAll();
         req.setAttribute("pageable", pageable);
-        req.setAttribute("products", products);
+        req.setAttribute("products", allProducts);
         req.getRequestDispatcher(LIST_PRODUCT_ADMIN + "list-product.jsp").forward(req, resp);
 
     }
