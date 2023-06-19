@@ -84,7 +84,7 @@
                                             <tbody>
                                             <c:forEach var="o" items="${requestScope.orders}">
                                                 <tr>
-                                                    <td>1</td>
+                                                    <td>${o.getId()}</td>
 
                                                     <td><fmt:formatDate value="${o.getCreateAt()}" pattern="yyyy-MM-dd"/></td>
                                                     <td><span class="success">
@@ -98,7 +98,19 @@
                                                         </c:choose>
                                                     </span></td>
                                                     <td>$${o.getSubTotal()} </td>
-                                                    <td><a href="/cart" class="view">view</a></td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${o.isPaid() == false}">
+                                                                <a href="/cart" class="view">view</a>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <form action="/cart?action=view" method="post">
+                                                                    <input hidden="hidden" name="idOrder" value="${o.getId()}">
+                                                                    <button class="btn btn-bordered-primary">View</button>
+                                                                </form>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </td>
                                                 </tr>
                                             </c:forEach>
                                             </tbody>

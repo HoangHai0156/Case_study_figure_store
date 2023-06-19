@@ -30,7 +30,7 @@ public class CartServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         productService = new ProductService();
-        orderService= new OrderService();
+        orderService = new OrderService();
         orderItemService = new OrderItemService();
         userService = new UserService();
     }
@@ -50,7 +50,6 @@ public class CartServlet extends HttpServlet {
                 break;
             case "check":
                 showCheckout(request, response, session);
-                break;
             default:
                 showCart(request, response, session);
                 break;
@@ -59,7 +58,7 @@ public class CartServlet extends HttpServlet {
 
     private void showCheckout(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException, ServletException {
         User user = (User) session.getAttribute("user");
-        if (user == null){
+        if (user == null) {
             response.sendRedirect("/user?action=login");
             return;
         }
@@ -68,9 +67,9 @@ public class CartServlet extends HttpServlet {
         List<OrderItem> orderItems = orderItemService.findAllByIdOrder(unpaidOrder.getId());
         unpaidOrder.setOrderItems(orderItems);
 
-        request.setAttribute("order",unpaidOrder);
-        request.setAttribute("products",allProducts);
-        request.getRequestDispatcher(Config.HOMEPAGE+"checkout.jsp").forward(request, response);
+        request.setAttribute("order", unpaidOrder);
+        request.setAttribute("products", allProducts);
+        request.getRequestDispatcher(Config.HOMEPAGE + "checkout.jsp").forward(request, response);
     }
 
     @Override
@@ -87,6 +86,17 @@ public class CartServlet extends HttpServlet {
             case "check":
                 doCheckout(request, response, session);
                 break;
+            case "view":
+                int idOrder = Integer.parseInt(request.getParameter("idOrder"));
+                Order order = orderService.findOrderById(idOrder);
+                List<Product> products = productService.findAll();
+                List<OrderItem> orderItems = orderItemService.findAllByIdOrder(order.getId());
+                order.setOrderItems(orderItems);
+
+                request.setAttribute("viewOrder", order);
+                request.setAttribute("viewProducts", products);
+                request.getRequestDispatcher("/WEB-INF/homepage/cart-view.jsp").forward(request, response);
+                break;
             default:
                 break;
         }
@@ -95,38 +105,43 @@ public class CartServlet extends HttpServlet {
     private void doCheckout(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException, ServletException {
         Map<String, String> errorsMap = new HashMap<>();
         User user = (User) session.getAttribute("user");
-        if (user == null){
+        if (user == null) {
             response.sendRedirect("/user?action=login");
             return;
         }
         Order unpaidOrder = orderService.findUserUnPaidOrder(user.getId());
+        if (unpaidOrder == null) {
+            response.sendRedirect("/product");
+            return;
+        }
+
         List<OrderItem> orderItems = orderItemService.findAllByIdOrder(unpaidOrder.getId());
 
         updateErrorsInput(request, errorsMap);
 
-        if (errorsMap.isEmpty()){
+        if (errorsMap.isEmpty()) {
             updateProductLQuantity(orderItems);
 
             orderService.setOrderPaid(unpaidOrder.getId());
             String successMess = "Thanh toán thành công! Bạn đã bị scam tiền. Tiếp tục shopping để bị scam ^^";
 
-            request.setAttribute("successMess",successMess);
-        }else {
+            request.setAttribute("successMess", successMess);
+        } else {
             List<Product> allProducts = productService.findAll();
             unpaidOrder.setOrderItems(orderItems);
 
-            request.setAttribute("errorsMap",errorsMap);
-            request.setAttribute("order",unpaidOrder);
-            request.setAttribute("products",allProducts);
+            request.setAttribute("errorsMap", errorsMap);
+            request.setAttribute("order", unpaidOrder);
+            request.setAttribute("products", allProducts);
         }
 
-        request.getRequestDispatcher(Config.HOMEPAGE+"checkout.jsp").forward(request, response);
+        request.getRequestDispatcher(Config.HOMEPAGE + "checkout.jsp").forward(request, response);
     }
 
     private void removeCartItem(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int idOrder = Integer.parseInt(request.getParameter("idOrder"));
         int idProduct = Integer.parseInt(request.getParameter("idProduct"));
-        orderItemService.remove(idOrder,idProduct);
+        orderItemService.remove(idOrder, idProduct);
         Order order = orderService.findOrderById(idOrder);
         updateOrderSubTotal(order);
 
@@ -134,33 +149,33 @@ public class CartServlet extends HttpServlet {
     }
 
     private void updateProductLQuantity(List<OrderItem> orderItems) {
-        for (OrderItem o : orderItems){
+        for (OrderItem o : orderItems) {
             Product product = productService.findProduct(o.getIdProduct());
             int newQuantity = product.getLeftQuantity() - o.getQuantity();
             product.setLeftQuantity(newQuantity);
-            productService.update(o.getIdProduct(),product);
+            productService.update(o.getIdProduct(), product);
         }
     }
 
     private static void updateErrorsInput(HttpServletRequest request, Map<String, String> errorsMap) {
         String fullName = request.getParameter("fullName");
         if (!ValidateUtils.isNameValid(fullName)) {
-            errorsMap.put("nameInvalid","Tên không hợp lệ. Tên phải từ 8-30 ký tự và bđ là chữ cái");
+            errorsMap.put("nameInvalid", "Tên không hợp lệ. Tên phải từ 8-30 ký tự và bđ là chữ cái");
         }
 
         String address = request.getParameter("address");
-        if (!ValidateUtils.isAddressValid(address)){
-            errorsMap.put("addressInvalid","Địa chỉ không hợp lệ");
+        if (!ValidateUtils.isAddressValid(address)) {
+            errorsMap.put("addressInvalid", "Địa chỉ không hợp lệ");
         }
 
         String phone = request.getParameter("phone");
-        if (!ValidateUtils.isPhoneValid(phone)){
-            errorsMap.put("phoneInvalid","Phone không hợp lệ");
+        if (!ValidateUtils.isPhoneValid(phone)) {
+            errorsMap.put("phoneInvalid", "Phone không hợp lệ");
         }
 
         String email = request.getParameter("email");
-        if (!ValidateUtils.isEmailValid(email)){
-            errorsMap.put("emailInvalid","Email không hợp lệ");
+        if (!ValidateUtils.isEmailValid(email)) {
+            errorsMap.put("emailInvalid", "Email không hợp lệ");
         }
     }
 
@@ -171,19 +186,20 @@ public class CartServlet extends HttpServlet {
 
     private void showCart(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
         User user = (User) session.getAttribute("user");
-        if (user != null){
+        if (user != null) {
             Order unpaidOrder = orderService.findUserUnPaidOrder(user.getId());
             List<Product> products = productService.findAll();
             List<OrderItem> orderItems = null;
-            if (unpaidOrder != null){
+            if (unpaidOrder != null) {
                 orderItems = orderItemService.findAllByIdOrder(unpaidOrder.getId());
                 unpaidOrder.setOrderItems(orderItems);
             }
-            request.setAttribute("order",unpaidOrder);
-            request.setAttribute("products",products);
+            request.setAttribute("order", unpaidOrder);
+            request.setAttribute("products", products);
         }
-        request.getRequestDispatcher("/WEB-INF/homepage/cart.jsp").forward(request,response);
+        request.getRequestDispatcher("/WEB-INF/homepage/cart.jsp").forward(request, response);
     }
+
     private void addToCart(HttpServletRequest request, HttpServletResponse response, String action, HttpSession session) throws ServletException, IOException {
         int idProduct = Integer.parseInt(request.getParameter("id"));
         Product product = productService.findProduct(idProduct);
@@ -191,29 +207,29 @@ public class CartServlet extends HttpServlet {
         List<Product> allProducts = productService.findAll();
         int quantity = Integer.parseInt(request.getParameter("quantity"));
 
-        if (quantity < 0){
+        if (quantity < 0) {
             response.sendRedirect("/cart");
             return;
         }
 
         User user = (User) session.getAttribute("user");
-        if (user == null){
+        if (user == null) {
             response.sendRedirect("/user?action=login");
             return;
         }
         Order unpaidOrder = orderService.findUserUnPaidOrder(user.getId());
         String cartMess;
 
-        if (quantity > product.getLeftQuantity() || quantity > 10){
+        if (quantity > product.getLeftQuantity() || quantity > 10) {
             cartMess = "Số lượng muốn mua không hợp lệ !";
 
-            request.setAttribute("product",product);
-            request.setAttribute("cartMess",cartMess);
+            request.setAttribute("product", product);
+            request.setAttribute("cartMess", cartMess);
 //            response.sendRedirect("/product?action=view&id="+idProduct);
 //            return;
-            request.getRequestDispatcher(Config.ADMIN_TO_PRODUCT+"view-product.jsp").forward(request,response);
-        }else {
-            if (unpaidOrder == null){
+            request.getRequestDispatcher(Config.ADMIN_TO_PRODUCT + "view-product.jsp").forward(request, response);
+        } else {
+            if (unpaidOrder == null) {
                 Order newOrder = new Order();
                 newOrder.setIdUser(user.getId());
                 orderService.save(newOrder);
@@ -226,15 +242,15 @@ public class CartServlet extends HttpServlet {
                 float subTotal = getSubTotal(unpaidOrder);
                 newOrder.setSubTotal(subTotal);
                 orderService.update(unpaidOrder.getId(), newOrder);
-            }else {
+            } else {
                 OrderItem orderItem = orderItemService.findOrderItem(unpaidOrder.getId(), idProduct);
-                if (orderItem != null){
-                    if (action.equals("add")){
+                if (orderItem != null) {
+                    if (action.equals("add")) {
                         quantity = orderItem.getQuantity() + quantity;
                     }
 
-                    if (quantity == 0){
-                        orderItemService.remove(unpaidOrder.getId(),idProduct);
+                    if (quantity == 0) {
+                        orderItemService.remove(unpaidOrder.getId(), idProduct);
                         Order order = orderService.findOrderById(unpaidOrder.getId());
                         updateOrderSubTotal(order);
 
@@ -242,12 +258,12 @@ public class CartServlet extends HttpServlet {
                         return;
                     }
 
-                    if (quantity > 10){
+                    if (quantity > 10) {
                         cartMess = "Số lượng muốn mua không hợp lệ !";
 
-                        request.setAttribute("product",product);
-                        request.setAttribute("cartMess",cartMess);
-                        request.getRequestDispatcher(Config.ADMIN_TO_PRODUCT+"view-product.jsp").forward(request,response);
+                        request.setAttribute("product", product);
+                        request.setAttribute("cartMess", cartMess);
+                        request.getRequestDispatcher(Config.ADMIN_TO_PRODUCT + "view-product.jsp").forward(request, response);
                         return;
                     }
 
@@ -255,9 +271,9 @@ public class CartServlet extends HttpServlet {
                     orderItem.setTotal(quantity * product.getPrice());
                     orderItemService.update(orderItem.getId(), orderItem);
 
-                }else {
+                } else {
                     orderItem = new OrderItem();
-                    setNullOrderItem(idProduct,product,quantity,unpaidOrder,orderItem);
+                    setNullOrderItem(idProduct, product, quantity, unpaidOrder, orderItem);
                     orderItemService.save(orderItem);
 
                 }
@@ -267,9 +283,9 @@ public class CartServlet extends HttpServlet {
             List<OrderItem> orderItems = orderItemService.findAllByIdOrder(unpaidOrder.getId());
             unpaidOrder.setOrderItems(orderItems);
 
-            request.setAttribute("order",unpaidOrder);
-            request.setAttribute("products",allProducts);
-            request.getRequestDispatcher(Config.HOMEPAGE+"cart.jsp").forward(request,response);
+            request.setAttribute("order", unpaidOrder);
+            request.setAttribute("products", allProducts);
+            request.getRequestDispatcher(Config.HOMEPAGE + "cart.jsp").forward(request, response);
         }
 
     }
@@ -290,40 +306,40 @@ public class CartServlet extends HttpServlet {
     private float getSubTotal(Order unpaidOrder) {
         float subTotal = 0;
         List<OrderItem> orderItems = orderItemService.findAllByIdOrder(unpaidOrder.getId());
-        for (OrderItem o : orderItems){
+        for (OrderItem o : orderItems) {
             subTotal += o.getTotal();
         }
         return subTotal;
     }
 
     /**
-    private void addProductToOrder(int idProduct, int quantity, Order order) {
-        OrderItem orderItem = new OrderItem(idProduct, quantity);
-        order.getOrderItems().add(orderItem);
-    }
-
-    private void updateProductInOrder(int id, int quantity, Order order) {
-        for (int i = 0; i < order.getOrderItems().size(); i++) {
-            if (order.getOrderItems().get(i).getIdProduct() == id) {
-                OrderItem temp = order.getOrderItems().get(i);
-                temp.setQuantity(quantity);
-                break;
-            }
-        }
-    }
-
-
-    private boolean checkIdProductExistOrder(int idProduct, Order order) {
-        if (order.getOrderItems() == null) {
-            return false;
-        }
-        for (int i = 0; i < order.getOrderItems().size(); i++) {
-            if (order.getOrderItems().get(i).getIdProduct() == idProduct) {
-                return true;
-            }
-        }
-        return false;
-    }
+     * private void addProductToOrder(int idProduct, int quantity, Order order) {
+     * OrderItem orderItem = new OrderItem(idProduct, quantity);
+     * order.getOrderItems().add(orderItem);
+     * }
+     * <p>
+     * private void updateProductInOrder(int id, int quantity, Order order) {
+     * for (int i = 0; i < order.getOrderItems().size(); i++) {
+     * if (order.getOrderItems().get(i).getIdProduct() == id) {
+     * OrderItem temp = order.getOrderItems().get(i);
+     * temp.setQuantity(quantity);
+     * break;
+     * }
+     * }
+     * }
+     * <p>
+     * <p>
+     * private boolean checkIdProductExistOrder(int idProduct, Order order) {
+     * if (order.getOrderItems() == null) {
+     * return false;
+     * }
+     * for (int i = 0; i < order.getOrderItems().size(); i++) {
+     * if (order.getOrderItems().get(i).getIdProduct() == idProduct) {
+     * return true;
+     * }
+     * }
+     * return false;
+     * }
      **/
 
     public void destroy() {

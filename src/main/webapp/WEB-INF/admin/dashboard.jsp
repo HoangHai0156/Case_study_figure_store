@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Editable Table | Velonic - Responsive Bootstrap 4 Admin Dashboard</title>
+    <title>Admin Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Responsive bootstrap 4 admin template" name="description">
     <meta content="Coderthemes" name="author">
@@ -40,8 +40,8 @@
                         <div class="card-body">
                             <div class="my-4 text-white">
                                 <i class="mdi mdi-comment-multiple"></i>
-                                <h2 class="my-0 font-weight-bold text-white"><span data-plugin="counterup">50</span></h2>
-                                <div>Comments</div>
+                                <h2 class="my-0 font-weight-bold text-white"><span data-plugin="counterup">${requestScope.orders.size()}</span></h2>
+                                <div>Orders</div>
                             </div>
                         </div>
                     </div>
@@ -52,8 +52,8 @@
                         <div class="card-body">
                             <div class="my-4 text-white">
                                 <i class="mdi mdi-cart"></i>
-                                <h2 class="my-0 text-white"><span data-plugin="counterup">12056</span></h2>
-                                <div>Sales</div>
+                                <h2 class="my-0 text-white"><span data-plugin="counterup">${requestScope.products.size()}</span></h2>
+                                <div>Products</div>
                             </div>
                         </div>
                     </div>
@@ -64,8 +64,8 @@
                         <div class="card-body">
                             <div class="my-4 text-white">
                                 <i class="mdi mdi-cash"></i>
-                                <h2 class="my-0 text-white"><span data-plugin="counterup">1268</span></h2>
-                                <div>New Orders</div>
+                                <h2 class="my-0 text-white"><span data-plugin="counterup">${requestScope.totalIncome}</span><span>$</span></h2>
+                                <div>Income</div>
                             </div>
                         </div>
                     </div>
@@ -76,8 +76,8 @@
                         <div class="card-body">
                             <div class="my-4 text-white">
                                 <i class="mdi mdi-account-multiple"></i>
-                                <h2 class="my-0 text-white"><span data-plugin="counterup">145</span></h2>
-                                <div>New Users</div>
+                                <h2 class="my-0 text-white"><span data-plugin="counterup">${requestScope.users.size()}</span></h2>
+                                <div>Users</div>
                             </div>
                         </div>
                     </div>

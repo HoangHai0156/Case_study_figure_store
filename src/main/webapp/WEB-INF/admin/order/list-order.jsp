@@ -57,6 +57,9 @@
 
                                                 <thead>
                                                 <tr role="row">
+                                                    <th style="width: 20px;">
+                                                        Id
+                                                    </th>
                                                     <th class="sorting_asc" tabindex="0"
                                                         aria-controls="datatable-buttons" rowspan="1" colspan="1"
                                                         style="width: 179.2px;" aria-sort="ascending"
@@ -84,7 +87,7 @@
                                                         rowspan="1" colspan="1" style="width: 126.2px;"
                                                         aria-label="Office: activate to sort column ascending">Status
                                                     </th>
-                                                    <th>
+                                                    <th style="width: 50px;">
                                                         Action
                                                     </th>
                                                 </tr>
@@ -93,26 +96,11 @@
                                                 <tbody>
 
 
-                                                <tr role="row">
-                                                    <td tabindex="0" class="sorting_1">Airi
-                                                        <Sa></Sa>
-                                                        tou
-                                                    </td>
-                                                    <td>Accountant</td>
-                                                    <td>33</td>
-                                                    <td>2008/11/28</td>
-                                                    <td>$162,700</td>
-                                                    <td>Completed</td>
-                                                    <td>
-                                                        <a class="far fa-eye" href="/order?action=view&id="></a>
-                                                        <a class="fas fa-edit" href="#"></a>
-                                                    </td>
-                                                </tr>
-
                                                 <c:forEach var="o" items="${requestScope.orders}">
                                                     <c:forEach var="u" items="${requestScope.users}">
-                                                        <c:if test="${o.getIdUser() == u.getId()}">
+                                                        <c:if test="${o.getIdUser() == u.getId() && o.getSubTotal() != 0}">
                                                             <tr role="row">
+                                                                <td>${o.getId()}</td>
                                                                 <td tabindex="0" class="sorting_1">${u.getName()}</td>
                                                                 <td>${u.getAddress()}</td>
                                                                 <td>${u.getPhone()}</td>
@@ -129,7 +117,9 @@
                                                                 </c:choose>
                                                                 <td>
                                                                     <a class="far fa-eye" href="/order?action=view&id=${o.getId()}"></a>
-                                                                    <a class="fas fa-edit" href="#"></a>
+                                                                    <c:if test="${o.isPaid() == false}">
+                                                                        <a class="fas fa-edit" href="/order?action=edit&id=${o.getId()}"></a>
+                                                                    </c:if>
                                                                 </td>
                                                             </tr>
                                                         </c:if>

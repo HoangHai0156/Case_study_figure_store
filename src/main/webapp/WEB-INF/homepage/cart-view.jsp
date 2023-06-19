@@ -54,7 +54,6 @@
                                     <table>
                                         <thead>
                                         <tr>
-                                            <th class="product_remove">Delete</th>
                                             <th class="product_thumb">Image</th>
                                             <th class="product_name">Name</th>
                                             <th class="product-price">Price</th>
@@ -63,21 +62,18 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <c:forEach items="${requestScope.order.getOrderItems()}" var="oT">
-                                            <c:forEach items="${requestScope.products}" var="p">
+                                        <c:forEach items="${requestScope.viewOrder.getOrderItems()}" var="oT">
+                                            <c:forEach items="${requestScope.viewProducts}" var="p">
                                                 <c:if test="${p.getId() == oT.getIdProduct()}">
 
                                                     <tr>
-                                                        <form action="/cart?action=remove" method="post">
-                                                            <input name="idOrder" value="${requestScope.order.getId()}" hidden="hidden">
-                                                            <input name="idProduct" value="${oT.getIdProduct()}" hidden="hidden">
-                                                            <td class="product_remove"><button class="btn btn-danger rounded-lg fa fa-trash-o" type="submit"></button></td>
-                                                            <td class="product_thumb"><a href="#"><img src="${p.getImgLink()}" alt=""></a></td>
-                                                            <td class="product_name"><a href="#">${p.getName()}</a></td>
-                                                            <td class="product-price">${p.getPrice()}</td>
-                                                            <td class="product_quantity" ><input onchange="handleQuantityChange(${p.getId()},this.value)" min="0" max="10" value="${oT.getQuantity()}" type="number" name="quantity" ></td>
-                                                            <td class="product_total">${p.getPrice() * oT.getQuantity()}</td>
-                                                        </form>
+                                                        <input name="idOrder" value="${requestScope.order.getId()}" hidden="hidden">
+                                                        <input name="idProduct" value="${oT.getIdProduct()}" hidden="hidden">
+                                                        <td class="product_thumb" ><a href="#"><img style="width: 80px !important;" src="${p.getImgLink()}" alt=""></a></td>
+                                                        <td class="product_name"><a href="#">${p.getName()}</a></td>
+                                                        <td class="product-price">${p.getPrice()}</td>
+                                                        <td class="product_quantity" ><input disabled value="${oT.getQuantity()}" type="number" name="quantity"></td>
+                                                        <td class="product_total">${p.getPrice() * oT.getQuantity()}</td>
                                                     </tr>
 
                                                 </c:if>
@@ -94,25 +90,15 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-6">
                                 <div class="coupon_code">
-                                    <h3>Coupon</h3>
-                                    <div class="coupon_inner">
-                                        <p>Enter your coupon code if you have one.</p>
-                                        <input placeholder="Coupon code" type="text">
-                                        <button type="submit">Apply coupon</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6">
-                                <div class="coupon_code">
                                     <h3>Cart Totals</h3>
                                     <div class="coupon_inner">
                                         <div class="cart_subtotal">
                                             <p>Subtotal</p>
-                                            <p class="cart_amount">${requestScope.order.getSubTotal()}</p>
+                                            <p class="cart_amount">${requestScope.viewOrder.getSubTotal()}</p>
                                         </div>
                                         <div class="cart_subtotal ">
                                             <p>Discount</p>
-                                            <p class="cart_amount"><span>Discount</span> ${requestScope.order.getDiscount()}%</p>
+                                            <p class="cart_amount"><span>Discount</span> ${requestScope.viewOrder.getDiscount()}%</p>
                                         </div>
                                         <div class="cart_subtotal ">
                                             <p>Shipping</p>
@@ -122,10 +108,7 @@
 
                                         <div class="cart_subtotal">
                                             <p>Total</p>
-                                            <p class="cart_amount">$${requestScope.order.getSubTotal() - (requestScope.order.getSubTotal() * requestScope.order.getDiscount() / 100) + 10}</p>
-                                        </div>
-                                        <div class="checkout_btn">
-                                            <a href="/cart?action=check">Proceed to Checkout</a>
+                                            <p class="cart_amount">$${requestScope.viewOrder.getSubTotal() - (requestScope.viewOrder.getSubTotal() * requestScope.viewOrder.getDiscount() / 100) + 10}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -152,11 +135,6 @@
 
 <!-- all js here -->
 <jsp:include page="/WEB-INF/homepage/layout/js_footer.jsp"></jsp:include>
-<script>
-    function handleQuantityChange(idProduct, quantity){
-        let url = "/cart?action=change&id="+idProduct+"&quantity="+quantity;
-        window.location.assign(url);
-    }
-</script>
+
 </body>
 </html>

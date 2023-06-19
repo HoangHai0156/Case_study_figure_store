@@ -28,7 +28,7 @@
           <ul>
             <li><a href="contact.html" title="Contact">Contact</a></li>
             <c:if test="${sessionScope.user.geteRole().name.equals('ADMIN')}">
-              <li><a href="/product-manager" title="dashboard">My dashboard</a></li>
+              <li><a href="/dashboard" title="dashboard">My dashboard</a></li>
             </c:if>
             <li><a href="/user?action=myAccount" title="My account">My account</a></li>
             <li><a href="/cart" title="My cart">My cart</a></li>
@@ -51,8 +51,8 @@
     <div class="row align-items-center">
       <!--logo start-->
       <div class="col-lg-3 col-md-3">
-        <div class="logo">
-          <a href="/"><img src="/homepage_frontend/assets\img\logo\logo.jpg.png" alt=""></a>
+        <div class="logo" style="width: 128px">
+          <a href="/"><img src="/homepage_frontend/assets\img\logo\logo-figure.png" alt=""></a>
         </div>
       </div>
       <!--logo end-->

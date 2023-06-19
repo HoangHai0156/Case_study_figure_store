@@ -17,9 +17,9 @@
         <script>
             window.onload = function (){
                 Swal.fire({
-                    position: 'top-end',
+                    position: 'center',
                     icon: 'success',
-                    title: ${requestScope.successMess},
+                    title: 'thanh toán thành công!',
                     showConfirmButton: false,
                     timer: 1500
                 })

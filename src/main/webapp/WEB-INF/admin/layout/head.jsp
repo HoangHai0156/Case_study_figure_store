@@ -58,7 +58,7 @@
 
   <!-- LOGO -->
   <div class="logo-box">
-    <a href="index.html" class="logo text-center logo-dark">
+    <a href="/" class="logo text-center logo-dark">
                         <span class="logo-lg">
                             <img src="/admin_frontend/assets\images\logo-dark.png" alt="" height="18">
                           <!-- <span class="logo-lg-text-dark">Velonic</span> -->
@@ -69,7 +69,7 @@
                         </span>
     </a>
 
-    <a href="index.html" class="logo text-center logo-light">
+    <a href="/" class="logo text-center logo-light">
                         <span class="logo-lg">
                             <img src="/admin_frontend/assets\images\logo-light.png" alt="" height="18">
                           <!-- <span class="logo-lg-text-dark">Velonic</span> -->

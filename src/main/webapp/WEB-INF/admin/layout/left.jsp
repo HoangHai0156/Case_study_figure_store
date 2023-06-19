@@ -13,7 +13,7 @@
                         <a href="/dashboard" class="waves-effect">
                             <i class="ion-md-speedometer"></i>
                             <span>  Dashboard  </span>
-                            <span class="badge badge-info badge-pill float-right"> 3 </span>
+                            <span class="badge badge-info badge-pill float-right"> 4 </span>
                         </a>
                     </li>
 

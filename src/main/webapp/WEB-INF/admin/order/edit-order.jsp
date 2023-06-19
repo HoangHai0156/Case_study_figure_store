@@ -49,6 +49,7 @@
                                 <table>
                                     <thead>
                                     <tr>
+                                        <th class="product_remove">Delete</th>
                                         <th class="product_thumb">Image</th>
                                         <th class="product_name">Name</th>
                                         <th class="product-price">Price</th>
@@ -62,13 +63,16 @@
                                             <c:if test="${p.getId() == oT.getIdProduct()}">
 
                                                 <tr>
-                                                    <input name="idOrder" value="${requestScope.order.getId()}" hidden="hidden">
-                                                    <input name="idProduct" value="${oT.getIdProduct()}" hidden="hidden">
-                                                    <td class="product_thumb" ><a href="#"><img style="width: 80px !important;" src="${p.getImgLink()}" alt=""></a></td>
-                                                    <td class="product_name"><a href="#">${p.getName()}</a></td>
-                                                    <td class="product-price">${p.getPrice()}</td>
-                                                    <td class="product_quantity" ><input disabled value="${oT.getQuantity()}" type="number" name="quantity"></td>
-                                                    <td class="product_total">${p.getPrice() * oT.getQuantity()}</td>
+                                                    <form action="/order?action=edit" method="post">
+                                                        <input name="idOrder" value="${requestScope.order.getId()}" hidden="hidden">
+                                                        <input name="idProduct" value="${oT.getIdProduct()}" hidden="hidden">
+                                                        <td class="product_remove"><button class="btn btn-danger rounded-lg fa fa-trash-o" type="submit"></button></td>
+                                                        <td class="product_thumb" ><a href="#"><img style="width: 80px !important;" src="${p.getImgLink()}" alt=""></a></td>
+                                                        <td class="product_name"><a href="#">${p.getName()}</a></td>
+                                                        <td class="product-price">${p.getPrice()}</td>
+                                                        <td class="product_quantity" ><input onchange="handleQuantityChange(${p.getId()},this.value,${requestScope.order.getId()})" min="0" max="10" value="${oT.getQuantity()}" type="number" name="quantity" ></td>
+                                                        <td class="product_total">${p.getPrice() * oT.getQuantity()}</td>
+                                                    </form>
                                                 </tr>
 
                                             </c:if>
@@ -115,7 +119,12 @@
 <!-- Vendor js -->
 <jsp:include page="/WEB-INF/admin/layout/footer_js.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/homepage/layout/js_footer.jsp"></jsp:include>
-
+<script>
+    function handleQuantityChange(idProduct, quantity, idOrder){
+        let url = "/order?action=change&id="+idProduct+"&quantity="+quantity+"&idOrder="+idOrder;
+        window.location.assign(url);
+    }
+</script>
 
 </body>
 <grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>
