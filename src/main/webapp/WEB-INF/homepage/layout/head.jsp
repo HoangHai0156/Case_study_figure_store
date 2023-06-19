@@ -27,7 +27,9 @@
         <div class="header_links">
           <ul>
             <li><a href="contact.html" title="Contact">Contact</a></li>
-            <li><a href="wishlist.html" title="wishlist">My wishlist</a></li>
+            <c:if test="${sessionScope.user.geteRole().name.equals('ADMIN')}">
+              <li><a href="/product-manager" title="dashboard">My dashboard</a></li>
+            </c:if>
             <li><a href="/user?action=myAccount" title="My account">My account</a></li>
             <li><a href="/cart" title="My cart">My cart</a></li>
             <c:if test="${sessionScope.user == null}">
@@ -56,11 +58,9 @@
       <!--logo end-->
       <div class="col-lg-9 col-md-9">
         <div class="header_right_info">
-          <div class="search_bar">
-            <form disabled="disabled">
-              <input placeholder="Search..." type="text" value="${requestScope.pageable.getKw()}" onchange="handleChange(${requestScope.pageable.getPage()},${requestScope.pageable.getLimit()},this.value,'${requestScope.pageable.getSortField()}','${requestScope.pageable.getOrder()}',${requestScope.pageable.getIdCategory()},'${requestScope.pageable.getScale()}')">
-              <button type="reset" disabled><i class="fa fa-search"></i></button>
-            </form>
+          <div class="search_bar d-flex">
+              <input style="height: 37px !important;" placeholder="Search..." type="text" value="${requestScope.pageable.getKw()}" onchange="handleChange(${requestScope.pageable.getPage()},${requestScope.pageable.getLimit()},this.value,'${requestScope.pageable.getSortField()}','${requestScope.pageable.getOrder()}',${requestScope.pageable.getIdCategory()},'${requestScope.pageable.getScale()}')">
+              <button style="height: 37px !important;" class="btn btn-success"><i class="fa fa-search"></i></button>
           </div>
           <div class="shopping_cart">
             <a href="#"><i class="fa fa-shopping-cart"></i> ${requestScope.order.getOrderItems().size()} Item(s) - $${requestScope.order.getSubTotal()} <i class="fa fa-angle-down"></i></a>

@@ -18,8 +18,8 @@ public class ProductService extends DBContext {
     private final String SELECT_ALL = "SELECT * FROM products where (`deleteAt` is null)";
     private final String INSERT_PRODUCT = "INSERT INTO `products` (`name`, `price`, `leftQuantity`, `createAt`," +
             " `scale`, `idCategory`, `description`, `imgLink`, `studio`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String SELECT_BY_ID = "SELECT * FROM products where id = ? and `deleteAt` is null";
-    private final String UPDATE_PRODUCT = "UPDATE `products` SET `name` = ?, `price` = ?, `leftQuantity` = ?, `scale` = ?, `idCategory` = ?, `description` = ?, `imgLink` = ?, `studio` = ? where id = ? and `deleteAt` is null";
+    private final String SELECT_BY_ID = "SELECT * FROM products where id = ?";
+    private final String UPDATE_PRODUCT = "UPDATE `products` SET `name` = ?, `price` = ?, `leftQuantity` = ?, `scale` = ?, `idCategory` = ?, `description` = ?, `imgLink` = ?, `studio` = ? where id = ?";
     private final String DELETE_PRODUCT = "UPDATE `products` SET `deleteAt` = ? where id = ? and `deleteAt` is null";
     private final String SELECT_ALL_ADVANCE = "select p.*,c.`name` as categoryName from products p \n" +
             "join categories c on p.idCategory = c.id \n" +

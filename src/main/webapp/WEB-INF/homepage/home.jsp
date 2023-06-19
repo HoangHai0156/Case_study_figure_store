@@ -13,7 +13,6 @@
             height: 340px !important;
         }
     </style>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
 <!-- Add your site or application content here -->
@@ -32,7 +31,7 @@
                     <div class="col-12">
                         <div class="breadcrumb_content">
                             <ul>
-                                <li><a href="index.html">home</a></li>
+                                <li><a href="/">home</a></li>
                                 <li><i class="fa fa-angle-right"></i></li>
                                 <li>shop</li>
                             </ul>
@@ -151,16 +150,6 @@
                                     <option value="name" data-order='desc'>Product Name: Z-A</option>
                                     <option value="name" data-order='asc'>Product Name: A-Z</option>
                                 </select>
-                            <div class="select_option d-flex">
-                                <form action="" name="sortfield-form">
-                                    <label>Sort By</label>
-                                        <select name="sortfield" id="short" onchange="handleSortAndFilter()">
-                                            <option value="${pageable.getSortField()}">Price: Increase</option>
-                                            <option value="price">Price: Decrease</option>
-                                            <option value="name">Product Name:Z</option>
-                                            <option value="name">Product Name: A</option>
-                                        </select>
-                                </form>
                             </div>
                         </div>
                         <!--shop toolbar end-->
@@ -248,13 +237,13 @@
                         <!--pagination style start-->
                         <div class="pagination_style">
                             <div class="item_page">
-                                    <label for="page_select">show</label>
-                                    <select id="page_select" name="limit" onchange="handleChange(${requestScope.pageable.getPage()},this.value,'${requestScope.pageable.getKw()}','${requestScope.pageable.getSortField()}','${requestScope.pageable.getOrder()}',${requestScope.pageable.getIdCategory()},'${requestScope.pageable.getScale()}')">
-                                        <c:forEach var="limit" begin="1" end="10">
-                                            <option <c:if test="${limit == requestScope.pageable.getLimit()}">selected</c:if> value="${limit}">${limit}</option>
-                                        </c:forEach>
-                                    </select>
-                                    <span>Products by page</span>
+                                <label for="page_select">show</label>
+                                <select id="page_select" name="limit" onchange="handleChange(${requestScope.pageable.getPage()},this.value,'${requestScope.pageable.getKw()}','${requestScope.pageable.getSortField()}','${requestScope.pageable.getOrder()}',${requestScope.pageable.getIdCategory()},'${requestScope.pageable.getScale()}')">
+                                    <c:forEach var="limit" begin="1" end="10">
+                                        <option <c:if test="${limit == requestScope.pageable.getLimit()}">selected</c:if> value="${limit}">${limit}</option>
+                                    </c:forEach>
+                                </select>
+                                <span>Products by page</span>
                             </div>
                             <div class="page_number">
                                 <span>Pages: </span>
@@ -277,7 +266,6 @@
                                                 <c:otherwise>
                                                     <li class="page-item">
                                                         <a class="page-link" href="/product?page=${page}&limit=${requestScope.pageable.getLimit()}&kw=${requestScope.pageable.getKw()}&sortField=${requestScope.pageable.getSortField()}&order=${requestScope.pageable.getOrder()}&idCategory=${requestScope.pageable.getIdCategory()}&scale=${requestScope.pageable.getScale()}">${page}</a>
-                                                        <a class="page-link" href="/product?kw=${pageable.getKw()}&category=${pageable.getIdCategory()}&page=${page}">${page}</a>
                                                     </li>
                                                 </c:otherwise>
                                             </c:choose>

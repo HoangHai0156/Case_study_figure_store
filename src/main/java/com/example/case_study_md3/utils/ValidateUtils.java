@@ -17,7 +17,7 @@ public class ValidateUtils {
         return matcher.matches();
     }
     public static boolean isDescriptionValid(String description){
-        REGEX = "^[a-zA-Z][a-zA-Z0-9\\s.,!?-]{8,245}$";
+        REGEX = "^[a-zA-Z][a-zA-Z0-9\\s.,!?-_()]{8,245}$";
         return Pattern.matches(REGEX,description);
     }
 
