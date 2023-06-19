@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderService extends DBContext{
+    private static final String SELECT_ALL_ORDERS = "SELECT * FROM orders";
     private static final String SELECT_ALL_PAID_ORDERS = "SELECT * FROM orders  where isPaid = true;";
     private static final String SELECT_ALL_PAID_ORDERS_USER = "SELECT * FROM orders  where isPaid = true and idUser = ?;";
     private static final String SELECT_ALL_UNPAID_ORDERS = "SELECT * FROM orders  where isPaid = false;";
@@ -18,6 +19,22 @@ public class OrderService extends DBContext{
     private static final String UPDATE_ORDER = "UPDATE `orders` SET `idUser` = ?, `isPaid` = ?, `subTotal` = ?, `discount` = ? WHERE (`id` = ?);";
     private static final String DELETE_ORDER = "DELETE FROM `orders` WHERE (`id` = ?);";
     private static final String ORDER_SET_PAID = "UPDATE `orders` SET `isPaid` = true WHERE (`id` = ?);";
+    public List<Order> findAll(){
+        List<Order> orders = new ArrayList<>();
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_ORDERS)) {
+
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                Order order = getOrderFromResultSet(rs);
+                orders.add(order);
+            }
+
+        }catch (SQLException sqlException){
+            printSQLException(sqlException);
+        }
+        return orders;
+    }
     public void setOrderPaid(int id){
         try(Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(ORDER_SET_PAID)) {

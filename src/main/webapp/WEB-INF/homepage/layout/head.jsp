@@ -57,9 +57,9 @@
       <div class="col-lg-9 col-md-9">
         <div class="header_right_info">
           <div class="search_bar">
-            <form action="/product?action=search" method="=get">
-              <input placeholder="Search..." type="text" name="kw" value="${requestScope.pageable.getKw()}">
-              <button type="submit"><i class="fa fa-search"></i></button>
+            <form disabled="disabled">
+              <input placeholder="Search..." type="text" value="${requestScope.pageable.getKw()}" onchange="handleChange(${requestScope.pageable.getPage()},${requestScope.pageable.getLimit()},this.value,'${requestScope.pageable.getSortField()}','${requestScope.pageable.getOrder()}',${requestScope.pageable.getIdCategory()},'${requestScope.pageable.getScale()}')">
+              <button type="reset" disabled><i class="fa fa-search"></i></button>
             </form>
           </div>
           <div class="shopping_cart">

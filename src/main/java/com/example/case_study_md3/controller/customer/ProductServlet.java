@@ -30,13 +30,13 @@ public class ProductServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
 
-        ProductPageable pageable = new ProductPageable();
-        inputProductPageable(req, pageable);
-        System.out.println("........................." + pageable.getScale());
         EScale[] scales = EScale.values();
         Map<Integer, Category> categoryMap = categoryService.getCategoryMap();
         List<Product> allProducts = productService.findAll();
-        List<Product> products = productService.findAllAdvance(pageable);
+
+//        /product?page=&limit=&kw=&sortField=&order=&idCategory=&totalPage=&scale=
+//        ${requestScope.pageable.getPage()},${requestScope.pageable.getLimit()},'${requestScope.pageable.getKw()}','${requestScope.pageable.getSortField()}','${requestScope.pageable.getOrder()}',${requestScope.pageable.getIdCategory()},'${requestScope.pageable.getScale()}'
+//        pageable.getPage();pageable.getLimit();pageable.getKw();pageable.getSortField();pageable.getOrder();pageable.getIdCategory();pageable.getTotalPage();pageable.getScale();
 
         User user = (User) req.getSession().getAttribute("user");
         Order unpaidOrder = new Order();
@@ -55,33 +55,42 @@ public class ProductServlet extends HttpServlet {
         }
         switch (action){
             case "view":
-                int id = Integer.parseInt(req.getParameter("id"));
-                Product product = productService.findProduct(id);
-
-                req.setAttribute("allProducts",allProducts);
-                req.setAttribute("products",products);
-                req.setAttribute("order",unpaidOrder);
-                req.setAttribute("scales",scales);
-                req.setAttribute("product",product);
-                req.setAttribute("categoryMap",categoryMap);
-                req.getRequestDispatcher("/WEB-INF/admin/product/view-product.jsp").forward(req,resp);
+                showView(req, resp, scales, categoryMap, allProducts, unpaidOrder);
                 break;
-
-
             default:
-                List<Product> specials = productService.findSpecial();
-
-                //allProducts là tất cả product, kích thước không bị ảnh hưởng bởi pageable. Dùng cho head, hiện mini cart
-                req.setAttribute("allProducts",allProducts);
-                req.setAttribute("order",unpaidOrder);
-                req.setAttribute("pageable", pageable);
-                req.setAttribute("scales",scales);
-                req.setAttribute("specials",specials);
-                req.setAttribute("products",products);
-                req.setAttribute("categoryMap",categoryMap);
-                req.getRequestDispatcher("/WEB-INF/homepage/home.jsp").forward(req,resp);
+                showListProduct(req, resp, scales, categoryMap, allProducts, unpaidOrder);
                 break;
         }
+    }
+
+    private void showListProduct(HttpServletRequest req, HttpServletResponse resp, EScale[] scales, Map<Integer, Category> categoryMap, List<Product> allProducts, Order unpaidOrder) throws ServletException, IOException {
+        List<Product> specials = productService.findSpecial();
+        ProductPageable pageable = new ProductPageable();
+        inputProductPageable(req, pageable);
+        System.out.println("........................." + pageable.getScale());
+        List<Product> products = productService.findAllAdvance(pageable);
+
+        //allProducts là tất cả product, kích thước không bị ảnh hưởng bởi pageable. Dùng cho head, hiện mini cart
+        req.setAttribute("allProducts", allProducts);
+        req.setAttribute("order", unpaidOrder);
+        req.setAttribute("pageable", pageable);
+        req.setAttribute("scales", scales);
+        req.setAttribute("specials",specials);
+        req.setAttribute("products",products);
+        req.setAttribute("categoryMap", categoryMap);
+        req.getRequestDispatcher("/WEB-INF/homepage/home.jsp").forward(req, resp);
+    }
+
+    private void showView(HttpServletRequest req, HttpServletResponse resp, EScale[] scales, Map<Integer, Category> categoryMap, List<Product> allProducts, Order unpaidOrder) throws ServletException, IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
+        Product product = productService.findProduct(id);
+
+        req.setAttribute("allProducts", allProducts);
+        req.setAttribute("order", unpaidOrder);
+        req.setAttribute("scales", scales);
+        req.setAttribute("product",product);
+        req.setAttribute("categoryMap", categoryMap);
+        req.getRequestDispatcher("/WEB-INF/admin/product/view-product.jsp").forward(req, resp);
     }
 
     @Override
@@ -117,16 +126,16 @@ public class ProductServlet extends HttpServlet {
             int limit = Integer.parseInt(request.getParameter("limit"));
             pageable.setLimit(limit);
         }
-        if (request.getParameter("sortfield") != null) {
-            String sortField = request.getParameter("sortfield");
+        if (request.getParameter("sortField") != null) {
+            String sortField = request.getParameter("sortField");
             pageable.setSortField(sortField);
         }
         if (request.getParameter("order") != null) {
             String order = request.getParameter("order");
             pageable.setOrder(order);
         }
-        if (request.getParameter("category") != null) {
-            int idCategory = Integer.parseInt(request.getParameter("category"));
+        if (request.getParameter("idCategory") != null) {
+            int idCategory = Integer.parseInt(request.getParameter("idCategory"));
             pageable.setIdCategory(idCategory);
         }
         if (request.getParameter("scale") != null) {

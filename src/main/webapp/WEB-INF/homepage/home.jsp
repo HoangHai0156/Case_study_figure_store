@@ -49,29 +49,21 @@
                         <div class="d-flex align-items-start flex-column">
                             <div class="sidebar_widget shop_c">
                                 <h4>Categories</h4>
-                                <form action="" method="get" name="category-form">
-                                    <select name="category" id="cate" onchange="handleCategoryChange('${pageable.getKw()}')"   >
-                                        <option value="-1">All</option>
-                                        <c:forEach var="c" items="${categoryMap.keySet()}">
-                                            <option
-                                                    <c:if test="${c == requestScope.pageable.getIdCategory()}">selected</c:if>
-                                                    value="${c}"}>${categoryMap.get(c).getName()}</option>
-                                        </c:forEach>
-                                    </select>
-                                </form>
+                                <select name="idCategory" id="cate" onchange="handleChange(${requestScope.pageable.getPage()},${requestScope.pageable.getLimit()},'${requestScope.pageable.getKw()}','${requestScope.pageable.getSortField()}','${requestScope.pageable.getOrder()}',this.value,'${requestScope.pageable.getScale()}')">
+                                    <option <c:if test="${requestScope.pageable.getIdCategory() == -1}">selected</c:if> value="-1">All</option>
+                                    <c:forEach var="c" items="${requestScope.categoryMap.keySet()}">
+                                        <option <c:if test="${c == requestScope.pageable.getIdCategory()}">selected</c:if> value="${c}">${requestScope.categoryMap.get(c).getName()}</option>
+                                    </c:forEach>
+                                </select>
                             </div>
                             <div class="sidebar_widget shop_c">
                                 <h4>Scale</h4>
-                                <form action="" name="scales-form">
-                                    <select name="scale" id="scale" onchange="submitScales()">
-                                        <option value="all">All</option>
-                                        <c:forEach var="sc" items="${scales}">
-                                            <option
-                                                    <c:if test="${sc.getScale().equals(requestScope.pageable.getScale())}">selected</c:if>
-                                                    value="${sc.getScale()}">${sc.getScale()}</option>
-                                        </c:forEach>
-                                    </select>
-                                </form>
+                                <select name="scale" id="scale" onchange="handleChange(${requestScope.pageable.getPage()},${requestScope.pageable.getLimit()},'${requestScope.pageable.getKw()}','${requestScope.pageable.getSortField()}','${requestScope.pageable.getOrder()}',${requestScope.pageable.getIdCategory()},this.value)">
+                                    <option <c:if test="${requestScope.pageable.getScale().equals('all')}">selected</c:if> value="all">All</option>
+                                    <c:forEach var="sc" items="${requestScope.scales}">
+                                        <option <c:if test="${sc.getScale().equals(requestScope.pageable.getScale())}">selected</c:if> value="${sc.getScale()}">${sc.getScale()}</option>
+                                    </c:forEach>
+                                </select>
                             </div>
                         </div>
                         <!--color area end-->
@@ -147,19 +139,17 @@
                                 </ul>
                             </div>
                             <div class="page_amount">
-                                <p>Showing 1 - 10 of ${products.size()} results</p>
+                                <p>Showing ${(requestScope.pageable.getPage()-1) * requestScope.pageable.getLimit() + 1} - ${requestScope.pageable.getPage() * requestScope.pageable.getLimit()} of found results</p>
                             </div>
 
                             <div class="select_option">
-                                <form action="" name="sortfield-form">
-                                    <label>Sort By</label>
-                                    <select name="sortfield" id="short" onchange="handleSortAndFilter()">
-                                        <option value="price">Price: Increase</option>
-                                        <option value="price">Price: Decrease</option>
-                                        <option value="name">Product Name:Z</option>
-                                        <option value="name">Product Name: A</option>
-                                    </select>
-                                </form>
+                                <label>Sort By</label>
+                                <select onchange="handleChange(${requestScope.pageable.getPage()},${requestScope.pageable.getLimit()},'${requestScope.pageable.getKw()}',this.value,'${requestScope.pageable.getOrder()}',${requestScope.pageable.getIdCategory()},'${requestScope.pageable.getScale()}')">
+                                    <option value="price" data-order='asc'>Price: Increase</option>
+                                    <option value="price" data-order='desc'>Price: Decrease</option>
+                                    <option value="name" data-order='desc'>Product Name: Z-A</option>
+                                    <option value="name" data-order='asc'>Product Name: A-Z</option>
+                                </select>
                             </div>
                         </div>
                         <!--shop toolbar end-->
@@ -174,9 +164,9 @@
                                                 <div class="single_product">
                                                     <div class="product_thumb">
                                                         <a href="/product?action=view&id=${p.getId()}"><img src="${p.getImgLink()}" alt=""></a>
-<%--                                                        <div class="img_icone">--%>
-<%--                                                            <img src="/homepage_frontend/assets\img\cart\span-new.png" alt="">--%>
-<%--                                                        </div>--%>
+                                                            <%--                                                        <div class="img_icone">--%>
+                                                            <%--                                                            <img src="/homepage_frontend/assets\img\cart\span-new.png" alt="">--%>
+                                                            <%--                                                        </div>--%>
                                                         <div class="product_action">
                                                             <a href="/cart?action=add&id=${p.getId()}&quantity=1"> <i class="fa fa-shopping-cart"></i> Add to cart</a>
                                                         </div>
@@ -187,7 +177,7 @@
                                                     </div>
                                                     <div class="product_info">
                                                         <ul>
-<%--                                                            <li><a href="#" title=" Add to Wishlist ">Add to Wishlist</a></li>--%>
+                                                                <%--                                                            <li><a href="#" title=" Add to Wishlist ">Add to Wishlist</a></li>--%>
                                                             <li><a href="/product?action=view&id=${p.getId()}" data-toggle="modal" data-target="#modal_box" title="Quick view">View Detail</a></li>
                                                         </ul>
                                                     </div>
@@ -203,9 +193,9 @@
                                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                                     <div class="product_thumb">
                                                         <a href="/product?action=view&id=${p.getId()}"><img src="${p.getImgLink()}" alt=""></a>
-<%--                                                        <div class="hot_img">--%>
-<%--                                                            <img src="/homepage_frontend/assets\img\cart\span-hot.png" alt="">--%>
-<%--                                                        </div>--%>
+                                                            <%--                                                        <div class="hot_img">--%>
+                                                            <%--                                                            <img src="/homepage_frontend/assets\img\cart\span-hot.png" alt="">--%>
+                                                            <%--                                                        </div>--%>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-8 col-md-6 col-sm-6">
@@ -247,15 +237,13 @@
                         <!--pagination style start-->
                         <div class="pagination_style">
                             <div class="item_page">
-                                <form action="#">
                                     <label for="page_select">show</label>
-                                    <select id="page_select" name="limit">
+                                    <select id="page_select" name="limit" onchange="handleChange(${requestScope.pageable.getPage()},this.value,'${requestScope.pageable.getKw()}','${requestScope.pageable.getSortField()}','${requestScope.pageable.getOrder()}',${requestScope.pageable.getIdCategory()},'${requestScope.pageable.getScale()}')">
                                         <c:forEach var="limit" begin="1" end="10">
-                                            <option value="${limit}">${limit}</option>
+                                            <option <c:if test="${limit == requestScope.pageable.getLimit()}">selected</c:if> value="${limit}">${limit}</option>
                                         </c:forEach>
                                     </select>
                                     <span>Products by page</span>
-                                </form>
                             </div>
                             <div class="page_number">
                                 <span>Pages: </span>
@@ -263,7 +251,7 @@
                                     <ul>
                                         <c:if test="${pageable.getPage() > 1}">
                                             <li class="page-item">
-                                                <a class="page-link" href="/product?kw=${pageable.getKw()}&category=${pageable.getIdCategory()}&page=${pageable.getPage() - 1}">
+                                                <a class="page-link" href="/product?page=${requestScope.pageable.getPage()-1}&limit=${requestScope.pageable.getLimit()}&kw=${requestScope.pageable.getKw()}&sortField=${requestScope.pageable.getSortField()}&order=${requestScope.pageable.getOrder()}&idCategory=${requestScope.pageable.getIdCategory()}&scale=${requestScope.pageable.getScale()}">
                                                     <span aria-hidden="true">&laquo;</span>
                                                 </a>
                                             </li>
@@ -277,19 +265,19 @@
                                                 </c:when>
                                                 <c:otherwise>
                                                     <li class="page-item">
-                                                        <a class="page-link" href="product?kw=${pageable.getKw()}&category=${pageable.getIdCategory()}&page=${page}">${page}</a>
+                                                        <a class="page-link" href="/product?page=${page}&limit=${requestScope.pageable.getLimit()}&kw=${requestScope.pageable.getKw()}&sortField=${requestScope.pageable.getSortField()}&order=${requestScope.pageable.getOrder()}&idCategory=${requestScope.pageable.getIdCategory()}&scale=${requestScope.pageable.getScale()}">${page}</a>
                                                     </li>
                                                 </c:otherwise>
                                             </c:choose>
                                         </c:forEach>
 
-<%--                                        <li class="page-item"><a class="page-link" href="#">1</a></li>--%>
-<%--                                        <li class="page-item"><a class="page-link" href="#">2</a></li>--%>
-<%--                                        <li class="page-item"><a class="page-link" href="#">3</a></li>--%>
+                                        <%--                                        <li class="page-item"><a class="page-link" href="#">1</a></li>--%>
+                                        <%--                                        <li class="page-item"><a class="page-link" href="#">2</a></li>--%>
+                                        <%--                                        <li class="page-item"><a class="page-link" href="#">3</a></li>--%>
 
-                                        <c:if test="${pageable.getPage() > pageable.getTotalPage()}">
+                                        <c:if test="${pageable.getPage() < pageable.getTotalPage()}">
                                             <li class="page-item">
-                                                <a class="page-link" href="/product?kw=${pageable.getKw()}&category=${pageable.getIdCategory()}&page=${pageable.getPage() + 1}">
+                                                <a class="page-link" href="/product?page=${requestScope.pageable.getPage()+1}&limit=${requestScope.pageable.getLimit()}&kw=${requestScope.pageable.getKw()}&sortField=${requestScope.pageable.getSortField()}&order=${requestScope.pageable.getOrder()}&idCategory=${requestScope.pageable.getIdCategory()}&scale=${requestScope.pageable.getScale()}">
                                                     <span aria-hidden="true">&raquo;</span>
                                                 </a>
                                             </li>
@@ -322,25 +310,5 @@
 
 <!-- all js here -->
 <jsp:include page="/WEB-INF/homepage/layout/js_footer.jsp"/>
-<script>
-
-
-    function handleCategoryChange(kw) {
-        let idCategory = document.getElementById('cate').value;
-        window.location.href = '/product?&kw=' + kw + '&category=' + idCategory;
-
-        // document.forms["category-form"].submit();
-
-    }
-    function handleSortAndFilter(){
-        document.forms["sortfield-form"].submit();
-    }
-    function submitScales(){
-        document.forms["scales-form"].submit();
-    }
-
-// '/product?sortfield=' + sortfield + '&order=' + 'asc' + '&kw=' + kw + '&category=' + idCategory + '&scale=' + '1:10' + '&page=' + page + '&limit=' + lm;
-
-</script>
 </body>
 </html>
