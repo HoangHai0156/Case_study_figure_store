@@ -25,4 +25,13 @@ public enum ERole {
     public void setName(String name) {
         this.name = name;
     }
+    public static ERole getERoleByRole(String role){
+        for (ERole eRole: ERole.values()
+        ) {
+            if (eRole.getName().equals(role)){
+                return eRole;
+            }
+        }
+        return null;
+    }
 }
