@@ -107,10 +107,10 @@
                                 </div>
                                 <div class="tab-pane" id="address">
                                     <form action="user?action=changePass" method="post" class="p-2">
-                                        <c:if test="${requestScope.errorsP != null}">
+                                        <c:if test="${sessionScope.errorsP != null}">
                                             <div class="alert alert-danger">
                                                 <ul>
-                                                    <c:forEach items="${requestScope.errorsP}" var="e">
+                                                    <c:forEach items="${sessionScope.errorsP}" var="e">
                                                         <li>${e}</li>
                                                     </c:forEach>
                                                 </ul>
@@ -146,10 +146,10 @@
                                         <div class="login_form_container">
                                             <div class="account_login_form">
                                                 <form action="user?action=updateInfo" method="post">
-                                                    <c:if test="${requestScope.errors != null}">
+                                                    <c:if test="${sessionScope.errors != null}">
                                                         <div class="alert alert-danger">
                                                             <ul>
-                                                                <c:forEach items="${requestScope.errors}" var="e">
+                                                                <c:forEach items="${sessionScope.errors}" var="e">
                                                                     <li>${e}</li>
                                                                 </c:forEach>
                                                             </ul>
@@ -169,9 +169,9 @@
                                                         <button class="btn btn-bordered-primary" type="submit">Save</button>
                                                     </div>
                                                 </form>
-                                                <c:if test="${requestScope.message != null}">
+                                                <c:if test="${sessionScope.message != null}">
                                                     <div class="alert alert-success col-md-5 float-md-right">
-                                                        <strong>${requestScope.message}</strong>
+                                                        <strong>${sessionScope.message}</strong>
                                                     </div>
                                                 </c:if>
                                             </div>
@@ -205,20 +205,54 @@
     }
 
     // Lắng nghe sự kiện tải trang
-
     window.onload = function() {
         var scrollToParam = getParameterByName('scrollTo');
         if (scrollToParam === 'address') {
             var accountDetailsLink = document.querySelector('a[href="#address"]');
             if (accountDetailsLink) {
-                accountDetailsLink.click(); // Tự động click vào liên kết "Account details"
+                accountDetailsLink.click(); // Tự động click vào liên kết "Address"
                 var accountDetailsElement = document.getElementById("address");
+                if (accountDetailsElement) {
+                    accountDetailsElement.scrollIntoView(); // Cuộn xuống phần tử "#address"
+                }
+            }
+        } else if (scrollToParam === 'account-details') {
+            var accountDetailsLink = document.querySelector('a[href="#account-details"]');
+            if (accountDetailsLink) {
+                accountDetailsLink.click(); // Tự động click vào liên kết "Account details"
+                var accountDetailsElement = document.getElementById("account-details");
                 if (accountDetailsElement) {
                     accountDetailsElement.scrollIntoView(); // Cuộn xuống phần tử "#account-details"
                 }
             }
         }
     };
+    // window.onload = function() {
+    //     var scrollToParam = getParameterByName('scrollTo');
+    //     if (scrollToParam === 'address') {
+    //         var accountDetailsLink = document.querySelector('a[href="#address"]');
+    //         if (accountDetailsLink) {
+    //             accountDetailsLink.click();
+    //             var accountDetailsElement = document.getElementById("address");
+    //             if (accountDetailsElement) {
+    //                 accountDetailsElement.scrollIntoView();
+    //             }
+    //         }
+    //     }
+    // };
+    // window.onload = function() {
+    //     var scrollToParam = getParameterByName('scrollTo');
+    //     if (scrollToParam === 'account-details') {
+    //         var accountDetailsLink = document.querySelector('a[href="#account-details"]');
+    //         if (accountDetailsLink) {
+    //             accountDetailsLink.click(); // Tự động click vào liên kết "Account details"
+    //             var accountDetailsElement = document.getElementById("account-details");
+    //             if (accountDetailsElement) {
+    //                 accountDetailsElement.scrollIntoView(); // Cuộn xuống phần tử "#account-details"
+    //             }
+    //         }
+    //     }
+    // };
 </script>
 
 

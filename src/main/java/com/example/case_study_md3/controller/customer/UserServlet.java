@@ -109,20 +109,25 @@ public class UserServlet extends HttpServlet {
     }
 
     private void changePass(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
         List<String> errorsP = new ArrayList<>();
         String password = req.getParameter("password");
         String re_pass = req.getParameter("confirm-password");
         if (!password.equals(re_pass)) {
             errorsP.add("Mật khẩu không trùng khớp. Hãy nhập lại");
-            req.setAttribute("errorsP", errorsP);
-            req.getRequestDispatcher("/WEB-INF/homepage/user-account.jsp").forward(req, resp);
+//            req.setAttribute("errorsP", errorsP);
+            session.removeAttribute("messageP");
+            session.setAttribute("errorsP",errorsP);
+//            req.getRequestDispatcher("/WEB-INF/homepage/user-account.jsp").forward(req, resp);
+            String redirectURL = req.getContextPath() + "/user?action=myAccount&scrollTo=address";
+            resp.sendRedirect(redirectURL);
         } else {
-            HttpSession session = req.getSession();
             User user = (User) session.getAttribute("user");
 
             user.setPassword(password);
             userService.update(user.getId(), user);
 //            req.setAttribute("messageP", "Đổi mật khẩu thành công");
+            session.removeAttribute("errorsP");
             session.setAttribute("messageP", "Đổi mật khẩu thành công");
 //            req.getRequestDispatcher("/WEB-INF/homepage/user-account.jsp").forward(req, resp);
             String redirectURL = req.getContextPath() + "/user?action=myAccount&scrollTo=address";
@@ -141,12 +146,18 @@ public class UserServlet extends HttpServlet {
         validateInputDob(req, errors, user);
         if (errors.isEmpty()) {
             userService.update(user.getId(), user);
-            req.setAttribute("message", "Sửa thành công");
+//            req.setAttribute("message", "Sửa thành công");
+            session.removeAttribute("errors");
+            session.setAttribute("message","Sửa thành công");
         } else {
-            req.setAttribute("errors", errors);
-            req.setAttribute("user", user);
+//            req.setAttribute("errors", errors);
+            session.removeAttribute("message");
+            session.setAttribute("errors", errors);
+            session.setAttribute("user", user);
         }
-        req.getRequestDispatcher("/WEB-INF/homepage/user-account.jsp").forward(req, resp);
+        String redirectURL = req.getContextPath() + "/user?action=myAccount&scrollTo=account-details";
+        resp.sendRedirect(redirectURL);
+//        req.getRequestDispatcher("/WEB-INF/homepage/user-account.jsp").forward(req, resp);
     }
 
     private void validateInputDob(HttpServletRequest req, List<String> errors, User user) {
@@ -188,7 +199,7 @@ public class UserServlet extends HttpServlet {
     private void validateInputName(HttpServletRequest req, List<String> errors, User user) {
         String name = req.getParameter("name");
         if (!ValidateUtils.isNameValid(name)) {
-            errors.add("Tên không hợp lệ. Tên phải từ 8-30 ký tự và bđ là chữ cái");
+            errors.add("Tên không hợp lệ. Tên phải từ 8-30 ký tự và bắt đầu là chữ cái");
         } else {
             user.setName(name);
         }
@@ -229,7 +240,7 @@ public class UserServlet extends HttpServlet {
         String password = req.getParameter("password");
         String remember = req.getParameter("remember");
         User user = userService.checkUser(email, password);
-        if (user == null) {
+        if (user == null || user.getDeleteAt() != null) {
             errors.add("Email hoặc password không đúng");
             req.setAttribute("errors", errors);
             req.getRequestDispatcher("/WEB-INF/homepage/signIn.jsp").forward(req, resp);

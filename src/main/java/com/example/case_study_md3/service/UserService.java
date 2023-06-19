@@ -169,4 +169,18 @@ public class UserService extends DBContext {
             printSQLException(sqlException);
         }
     }
+    public int getTotalUser() {
+        String query = "SELECT count(*) FROM users";
+        try {
+            connection = getConnection();
+            ps = connection.prepareStatement(query);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException sqlException) {
+            printSQLException(sqlException);
+        }
+        return 0;
+    }
 }
