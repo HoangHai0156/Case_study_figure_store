@@ -35,7 +35,7 @@
                 <!-- end page title -->
                 <h1 class="text-center">Product Management</h1>
                 <div>
-                     <a href="/product-manager?action=create" class="btn btn-success m-3"><i class="fa-solid fa-plus"></i> Create Product</a>
+                     <a href="/product-manager?action=create" class="btn btn-success m-3"><i class="fa-solid fa-plus"></i> New Product</a>
                  </div>
                 <!-- end row -->
 

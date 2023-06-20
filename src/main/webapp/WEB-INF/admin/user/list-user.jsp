@@ -134,7 +134,7 @@
 <%--                                                                <a href="/admin?action=view&id=${u.id}" class="btn btn-primary btn-sm"><i--%>
 <%--                                                                        class="bi bi-eye-fill"></i></a>--%>
 
-                                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal${u.id}">
+                                                                <button type="button" class="btn btn-primary btn-sm " data-toggle="modal" data-target="#exampleModal${u.id}">
                                                                     <i class="bi bi-eye-fill"></i>
                                                                 </button>
 
