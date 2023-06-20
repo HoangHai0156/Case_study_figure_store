@@ -2,6 +2,7 @@ package com.example.case_study_md3.service;
 import com.example.case_study_md3.model.ERole;
 import com.example.case_study_md3.model.User;
 import com.example.case_study_md3.utils.DBContext;
+import org.mindrot.jbcrypt.BCrypt;
 
 
 import java.sql.Connection;
@@ -25,6 +26,47 @@ public class UserService extends DBContext {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
+    public static boolean isBCryptHash(String input) {
+        try {
+            BCrypt.checkpw("", input); // Check if it throws an exception
+            return true; // No exception, input is a valid BCrypt hash
+        } catch (IllegalArgumentException e) {
+            return false; // Exception thrown, input is not a BCrypt hash
+        }
+    }
+    public User checkUserHash(String email) {
+        try {
+            String query = "SELECT * FROM users WHERE email = ?";
+            connection = getConnection();
+            ps = connection.prepareStatement(query);
+            System.out.println("Function Check User " + ps);
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String fullName = rs.getString("fullName");
+                Date dob = rs.getDate("dob");
+                String address = rs.getString("address");
+                String phone = rs.getString("phone");
+                String emailD = rs.getString("email");
+                String password = rs.getString("password");
+                String pass;
+                if (!isBCryptHash(password)) {
+                    pass = BCrypt.hashpw(password, BCrypt.gensalt());
+                } else {
+                    pass = password;
+                }
+
+                Date createAt = rs.getDate("createAt");
+                String role = rs.getString("role");
+                Date deleteAt = rs.getDate("deleteAt");
+                return new User(id, fullName, dob, address, phone, emailD, pass, createAt, ERole.valueOf(role), deleteAt);
+            }
+        } catch (SQLException sqlException) {
+            printSQLException(sqlException);
+        }
+        return null;
+    }
 
     public User checkUser(String email, String password) {
         try {

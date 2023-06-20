@@ -9,7 +9,7 @@ import com.example.case_study_md3.service.UserService;
 import com.example.case_study_md3.utils.Config;
 import com.example.case_study_md3.utils.DateFormat;
 import com.example.case_study_md3.utils.ValidateUtils;
-
+import org.mindrot.jbcrypt.BCrypt;
 import java.io.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -123,8 +123,8 @@ public class UserServlet extends HttpServlet {
             resp.sendRedirect(redirectURL);
         } else {
             User user = (User) session.getAttribute("user");
-
-            user.setPassword(password);
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+            user.setPassword(hashedPassword);
             userService.update(user.getId(), user);
 //            req.setAttribute("messageP", "Đổi mật khẩu thành công");
             session.removeAttribute("errorsP");
@@ -207,6 +207,7 @@ public class UserServlet extends HttpServlet {
 
     private void signup(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<String> errors = new ArrayList<>();
+        String name = req.getParameter("name");
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         String re_pass = req.getParameter("confirm-password");
@@ -221,10 +222,12 @@ public class UserServlet extends HttpServlet {
                 req.setAttribute("errors", errors);
                 req.getRequestDispatcher("/WEB-INF/admin/user/create-user.jsp").forward(req, resp);
             } else {
+                String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
                 User userNew = new User();
+                userNew.setName(name);
                 userNew.setCreateAt(new Date());
                 userNew.setEmail(email);
-                userNew.setPassword(password);
+                userNew.setPassword(hashedPassword);
                 userNew.seteRole(ERole.USER);
                 userService.save(userNew);
                 req.setAttribute("message", "Đăng ký thành công. Login để đăng nhập");
@@ -239,8 +242,8 @@ public class UserServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         String remember = req.getParameter("remember");
-        User user = userService.checkUser(email, password);
-        if (user == null || user.getDeleteAt() != null) {
+        User user = userService.checkUserHash(email);
+        if (user == null || user.getDeleteAt() != null || !BCrypt.checkpw(password, user.getPassword())) {
             errors.add("Email hoặc password không đúng");
             req.setAttribute("errors", errors);
             req.getRequestDispatcher("/WEB-INF/homepage/signIn.jsp").forward(req, resp);
