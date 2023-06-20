@@ -26,7 +26,6 @@
       <div class="col-lg-6 col-md-6">
         <div class="header_links">
           <ul>
-            <li><a href="contact.html" title="Contact">Contact</a></li>
             <c:if test="${sessionScope.user.geteRole().name.equals('ADMIN')}">
               <li><a href="/dashboard" title="dashboard">My dashboard</a></li>
             </c:if>
@@ -126,7 +125,7 @@
                     </div>
                   </div>
                 </li>
-                <li><a href="shop.html">shop</a>
+                <li><a href="#">shop</a>
                   <div class="mega_menu jewelry">
                     <div class="mega_items jewelry">
                       <ul>
@@ -237,7 +236,7 @@
                       <div class="mega_items">
                         <h3><a href="#">Column2</a></h3>
                         <ul>
-                          <li><a href="blog.html">Blog </a></li>
+                          <li><a href="#">Blog </a></li>
                           <li><a href="blog-details.html">Blog  Details </a></li>
                           <li><a href="blog-fullwidth.html">Blog FullWidth</a></li>
                           <li><a href="blog-sidebar.html">Blog  Sidebar</a></li>
@@ -248,7 +247,6 @@
                       <div class="mega_items">
                         <h3><a href="#">Column3</a></h3>
                         <ul>
-                          <li><a href="contact.html">Contact</a></li>
                           <li><a href="cart.html">cart</a></li>
                           <li><a href="checkout.html">Checkout  </a></li>
                           <li><a href="wishlist.html">Wishlist</a></li>
@@ -270,7 +268,7 @@
                     </div>
                   </div>
                 </li>
-                <li><a href="contact.html">contact us</a></li>
+                <li><a href="#">contact us</a></li>
 
               </ul>
             </nav>
@@ -278,7 +276,7 @@
           <div class="mobile-menu d-lg-none">
             <nav>
               <ul>
-                <li><a href="index.html">Home</a>
+                <li><a href="/">Home</a>
                   <div>
                     <div>
                       <ul>
@@ -288,7 +286,7 @@
                     </div>
                   </div>
                 </li>
-                <li><a href="shop.html">shop</a>
+                <li><a href="#">shop</a>
                   <div>
                     <div>
                       <ul>
@@ -399,7 +397,7 @@
                       <div>
                         <h3><a href="#">Column2</a></h3>
                         <ul>
-                          <li><a href="blog.html">Blog </a></li>
+                          <li><a href="#">Blog </a></li>
                           <li><a href="blog-details.html">Blog  Details </a></li>
                           <li><a href="blog-fullwidth.html">Blog FullWidth</a></li>
                           <li><a href="blog-sidebar.html">Blog  Sidebar</a></li>
@@ -411,7 +409,7 @@
                         <h3><a href="#">Column3</a></h3>
                         <ul>
                           <li><a href="contact.html">Contact</a></li>
-                          <li><a href="cart.html">cart</a></li>
+                          <li><a href="cart.html">Cart</a></li>
                           <li><a href="checkout.html">Checkout  </a></li>
                           <li><a href="wishlist.html">Wishlist</a></li>
                           <li><a href="login.html">Login</a></li>

@@ -88,7 +88,9 @@ public class ProductServlet extends HttpServlet {
     private void showView(HttpServletRequest req, HttpServletResponse resp, EScale[] scales, Map<Integer, Category> categoryMap, List<Product> allProducts, Order unpaidOrder) throws ServletException, IOException {
         int id = Integer.parseInt(req.getParameter("id"));
         Product product = productService.findProduct(id);
+        String adMess = req.getParameter("mess");
 
+        req.setAttribute("adMess",adMess);
         req.setAttribute("allProducts", allProducts);
         req.setAttribute("order", unpaidOrder);
         req.setAttribute("scales", scales);

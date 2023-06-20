@@ -1,10 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<!DOCTYPE html>
+
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Data Table | Velonic - Responsive Bootstrap 4 Admin Dashboard</title>
+    <title>User Management</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Responsive bootstrap 4 admin template" name="description">
     <meta content="Coderthemes" name="author">
@@ -43,12 +45,12 @@
 
 
                 <!-- end row -->
+                <h1 class="text-center">User Management</h1>
 
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body table-responsive">
-                                <h1 class="text-center">User Management</h1>
                                 <a href="/admin?action=create" class="btn btn-primary font-weight-bold font-18"><i
                                         class="ion ion-md-add"></i>  New User</a>
                                 <div id="datatable-buttons_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">

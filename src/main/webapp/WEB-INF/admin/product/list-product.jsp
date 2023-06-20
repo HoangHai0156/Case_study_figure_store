@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Product Management</title>
@@ -113,7 +114,7 @@
                                                     <td>${p.geteStudio().getName()}</td>
                                                     <td>
                                                         <div class="d-flex justify-content-around">
-                                                            <a href="/product?action=view&id=${p.getId()}" class="btn btn-primary btn-sm"><i
+                                                            <a href="/product?action=view&id=${p.getId()}&mess=adView" class="btn btn-primary btn-sm"><i
                                                                     class="bi bi-eye-fill"></i></a>
                                                             <a href="/product-manager?action=edit&id=${p.getId()}" class="btn btn-primary btn-sm"><i
                                                                     class="fa-solid fa-pen"></i></a>

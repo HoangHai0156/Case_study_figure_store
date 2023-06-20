@@ -1,6 +1,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Product Management</title>
@@ -114,7 +115,7 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td><input type="submit" value="Edit Product" class="btn btn-primary"></td>
+                                <td><input type="submit" value="Save changes" class="btn btn-primary"></td>
                             </tr>
                         </table>
                     </fieldset>

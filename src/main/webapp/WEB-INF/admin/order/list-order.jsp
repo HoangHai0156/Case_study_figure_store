@@ -1,10 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<!DOCTYPE html>
+
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Data Table | Velonic - Responsive Bootstrap 4 Admin Dashboard</title>
+    <title>Order Management</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Responsive bootstrap 4 admin template" name="description">
     <meta content="Coderthemes" name="author">
@@ -40,12 +42,12 @@
 
 
                 <!-- end row -->
-
+                <h1 class="text-center">Order List</h1>
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body table-responsive">
-                                <h4 class="m-t-0 header-title mb-4"><b>Buttons example</b></h4>
+<%--                                <h1 class="m-t-0 header-title mb-4 text-center">Order List</h1>--%>
 
                                 <div id="datatable-buttons_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                                     <div class="row">
@@ -116,9 +118,11 @@
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                                 <td>
-                                                                    <a class="far fa-eye" href="/order?action=view&id=${o.getId()}"></a>
+                                                                    <a href="/order?action=view&id=${o.getId()}" class="btn btn-primary btn-sm"><i
+                                                                            class="bi bi-eye-fill"></i></a>
                                                                     <c:if test="${o.isPaid() == false}">
-                                                                        <a class="fas fa-edit" href="/order?action=edit&id=${o.getId()}"></a>
+                                                                        <a href="/order?action=edit&id=${o.getId()}" class="btn btn-primary btn-sm"><i
+                                                                                class="fa-solid fa-pen"></i></a>
                                                                     </c:if>
                                                                 </td>
                                                             </tr>
