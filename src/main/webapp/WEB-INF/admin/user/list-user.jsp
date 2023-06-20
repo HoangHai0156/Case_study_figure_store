@@ -86,12 +86,12 @@
                                                     </th>
                                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
                                                         rowspan="1" colspan="1" style="width: 121.2px;"
-                                                        aria-label="Start date: activate to sort column ascending">Role
+                                                        aria-label="Start date: activate to sort column ascending">Create At
 
                                                     </th>
                                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
                                                         rowspan="1" colspan="1" style="width: 108px;"
-                                                        aria-label="Salary: activate to sort column ascending">Create At
+                                                        aria-label="Salary: activate to sort column ascending">Role
                                                     </th>
                                                     <th>
                                                         Action
@@ -129,12 +129,44 @@
                                                         <td>${u.eRole.name}</td>
                                                         <td>
                                                             <div class="d-flex justify-content-around">
-                                                                <a href="/admin?action=view&id=${u.id}" class="btn btn-primary btn-sm"><i
-                                                                        class="bi bi-eye-fill"></i></a>
+<%--                                                                <a href="/admin?action=view&id=${u.id}" class="btn btn-primary btn-sm"><i--%>
+<%--                                                                        class="bi bi-eye-fill"></i></a>--%>
+
+                                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal${u.id}">
+                                                                    <i class="bi bi-eye-fill"></i>
+                                                                </button>
+
+                                                                <!-- Modal -->
+                                                                <div class="modal fade" id="exampleModal${u.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title" id="exampleModalLabel">User Detail</h5>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                Name: ${u.getName()}
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                DoB: ${u.dob}
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                Address: ${u.address}
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
                                                                 <a href="/admin?action=edit&id=${u.id}" class="btn btn-primary btn-sm"><i
                                                                         class="fa-solid fa-pen"></i></a>
-                                                                <a type="button" onclick="handleDeleteProduct(${u.getId()}, '${u.getName()}')" class="btn btn-lighten-danger btn-sm"><i
+                                                                <a type="button" onclick="handleDeleteUser(${u.getId()}, '${u.getName()}')" class="btn btn-lighten-danger btn-sm"><i
                                                                         class="fa-solid fa-trash-can"></i></a>
+
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -164,6 +196,7 @@
         </div>
         <!-- end content -->
 
+        <!-- Button trigger modal -->
 
         <!-- Footer Start -->
         <jsp:include page="/WEB-INF/admin/layout/footer.jsp"></jsp:include>
@@ -177,14 +210,54 @@
 
 </div>
 <!-- END wrapper -->
-
+<form method="post" id="frmHiden" action="/admin?action=delete">
+    <input type="hidden" id="txtIdDelete" name="idDelete"  />
+</form>
 
 <!-- Right Sidebar -->
 <jsp:include page="/WEB-INF/admin/layout/right.jsp"></jsp:include>
 
 <jsp:include page="/WEB-INF/admin/layout/footer_js.jsp"></jsp:include>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+<script>
+    function handleDeleteUser(id, name) {
+        document.getElementById("txtIdDelete").value = id;
 
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+        swalWithBootstrapButtons.fire({
+            title: 'Delete product "' + name + '" ?',
+            text: "Are you sure?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                swalWithBootstrapButtons.fire(
+                    'Deleted!',
+                )
+                setTimeout(function() {
+                    document.getElementById("frmHiden").submit();
+                }, 1000);
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                )
+            }
+        })
+    }
+</script>
 </body>
 <grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>
 </html>

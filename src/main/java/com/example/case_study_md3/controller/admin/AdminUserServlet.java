@@ -2,6 +2,7 @@ package com.example.case_study_md3.controller.admin;
 
 import com.example.case_study_md3.model.ERole;
 import com.example.case_study_md3.model.Pageable;
+import com.example.case_study_md3.model.Product;
 import com.example.case_study_md3.model.User;
 import com.example.case_study_md3.service.UserService;
 import com.example.case_study_md3.utils.Config;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @WebServlet(name = "AdminUserServlet", value = "/admin")
@@ -91,10 +93,62 @@ public class AdminUserServlet extends HttpServlet {
                 adminEditUser(req, resp);
                 break;
             case "create":
-//                adminCreateUser(req, resp);
+                adminCreateUser(req, resp);
+                break;
+            case "delete":
+
+                int idDelete = Integer.parseInt(req.getParameter("idDelete"));
+                userService.remove(idDelete);
+
+                resp.sendRedirect("/admin");
                 break;
             default:
                 break;
+        }
+    }
+
+    private void adminCreateUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<String> errors = new ArrayList<>();
+        User user = new User();
+        validateInputName(req, errors, user);
+        validateInputDob(req, errors, user);
+        validateInputAddress(req, errors, user);
+        validateInputPhone(req, errors, user);
+        checkInputEmail(req, errors, user);
+        String password = req.getParameter("password");
+        user.setPassword(password);
+        String strERole = req.getParameter("role");
+        ERole eRole = ERole.getERoleByRole(strERole);
+        if (eRole != null) {
+            user.seteRole(eRole);
+        } else {
+            errors.add("Role không hợp lệ");
+            user.seteRole(ERole.USER);
+        }
+        if (errors.isEmpty()) {
+            user.setCreateAt(new Date());
+            userService.save(user);
+            req.setAttribute("message", "Thêm thành công");
+        } else {
+            req.setAttribute("errors", errors);
+        }
+        req.setAttribute("user", user);
+        ERole[] eRoles = ERole.values();
+        req.setAttribute("roles", eRoles);
+        req.getRequestDispatcher(Config.ADMIN_TO_USER + "add-user.jsp").forward(req, resp);
+    }
+
+    private void checkInputEmail(HttpServletRequest req, List<String> errors, User user) {
+        String email = req.getParameter("email");
+        if (!ValidateUtils.isEmailValid(email)) {
+            errors.add("Email không hợp lệ");
+        } else {
+            User user1 = userService.checkAccount(email);
+            if (user1 != null) {
+                errors.add("Email đã đăng ký. Vui lòng nhập email khác");
+            } else {
+                user.setEmail(email);
+            }
         }
     }
 
@@ -122,8 +176,8 @@ public class AdminUserServlet extends HttpServlet {
             req.setAttribute("message", "Cập nhập thành công");
         } else {
             req.setAttribute("errors", errors);
-            req.setAttribute("user", user);
         }
+        req.setAttribute("user", user);
         ERole[] eRoles = ERole.values();
         req.setAttribute("roles", eRoles);
         req.getRequestDispatcher(Config.ADMIN_TO_USER + "edit-user.jsp").forward(req, resp);

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -60,7 +61,7 @@
               </tr>
               <tr>
                 <td>Day of birth </td>
-                <td><input type="text" name="dob" id="dob" class="form-control" value="${user.dob}"></td>
+                <td><input type="text" name="dob" id="dob" class="form-control" value=<fmt:formatDate value="${user.dob}" pattern="yyyy-MM-dd"/>></td>
               </tr>
               <tr>
                 <td>Address </td>
