@@ -154,7 +154,7 @@
 <jsp:include page="/WEB-INF/homepage/layout/js_footer.jsp"></jsp:include>
 <script>
     function handleQuantityChange(idProduct, quantity){
-        let url = "/cart?action=change&id="+idProduct+"&quantity="+quantity;
+        let url = "/cart?action=change&id="+idProduct+"&quantity="+quantity+"&doFrom=cart";
         window.location.assign(url);
     }
 </script>

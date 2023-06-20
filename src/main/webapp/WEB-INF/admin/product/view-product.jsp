@@ -94,6 +94,19 @@
                                     </form>
                                 </div>
                             </c:if>
+                            <div class="box_quantity mb-20">
+                                <form action="/cart?action=add" method="get">
+                                    <label>quantity</label>
+                                    <input name="action" value="add" hidden="">
+                                    <input name="id" value="${product.getId()}" hidden="">
+                                    <input name="doFrom" value="viewProduct" hidden="">
+                                    <input name="quantity" min="1" max="10" value="1" type="number">
+                                    <button type="submit"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                                    <c:if test="${cartMess != null}">
+                                        <p style="color: red">${cartMess}</p>
+                                    </c:if>
+                                </form>
+                            </div>
 
                             <div class="product_stock mb-20">
                                 <span> Studio </span>

@@ -62,7 +62,7 @@
               <button style="height: 37px !important;" class="btn btn-success"><i class="fa fa-search"></i></button>
           </div>
           <div class="shopping_cart">
-            <a href="#"><i class="fa fa-shopping-cart"></i> ${requestScope.order.getOrderItems().size()} Item(s) - $${requestScope.order.getSubTotal()} <i class="fa fa-angle-down"></i></a>
+            <a><i class="fa fa-shopping-cart"></i> ${requestScope.order.getOrderItems().size()} Item(s) - $${requestScope.order.getSubTotal()} <i class="fa fa-angle-down"></i></a>
 
             <!--mini cart-->
             <div class="mini_cart">
@@ -80,7 +80,12 @@
                         <span class="quantity">Qty: ${oT.getQuantity()}</span>
                       </div>
                       <div class="cart_remove">
-                        <a title="Remove this item" href="#"><i class="fa fa-times-circle"></i></a>
+                        <form action="/cart?action=remove" method="post">
+                          <input name="idOrder" value="${requestScope.order.getId()}" hidden="hidden">
+                          <input name="idProduct" value="${oT.getIdProduct()}" hidden="hidden">
+                          <input name="doFrom" value="homepage" hidden="hidden">
+                          <button title="Remove this item" type="submit" class="pl-2 pr-2 fa fa-times-circle btn btn-danger"></button>
+                        </form>
                       </div>
                     </div>
                   </c:if>
@@ -97,7 +102,7 @@
                 <span class="prices">  $${requestScope.order.getSubTotal() + 10}  </span>
               </div>
               <div class="cart_button">
-                <a href="checkout.html"> Check out</a>
+                <a href="/cart?action=check"> Check out</a>
               </div>
             </div>
             <!--mini cart end-->

@@ -144,11 +144,11 @@
 
                             <div class="select_option">
                                 <label>Sort By</label>
-                                <select onchange="handleChange(${requestScope.pageable.getPage()},${requestScope.pageable.getLimit()},'${requestScope.pageable.getKw()}',this.value,'${requestScope.pageable.getOrder()}',${requestScope.pageable.getIdCategory()},'${requestScope.pageable.getScale()}')">
-                                    <option value="price" data-order='asc'>Price: Increase</option>
-                                    <option value="price" data-order='desc'>Price: Decrease</option>
-                                    <option value="name" data-order='desc'>Product Name: Z-A</option>
-                                    <option value="name" data-order='asc'>Product Name: A-Z</option>
+                                <select onchange="handleSort(${requestScope.pageable.getPage()},${requestScope.pageable.getLimit()},'${requestScope.pageable.getKw()}',this.value,${requestScope.pageable.getIdCategory()},'${requestScope.pageable.getScale()}')">
+                                    <option value="price-asc">Price: Increase</option>
+                                    <option value="price-desc">Price: Decrease</option>
+                                    <option value="name-desc">Product Name: Z-A</option>
+                                    <option value="name-asc">Product Name: A-Z</option>
                                 </select>
                             </div>
                         </div>
@@ -168,7 +168,7 @@
                                                             <%--                                                            <img src="/homepage_frontend/assets\img\cart\span-new.png" alt="">--%>
                                                             <%--                                                        </div>--%>
                                                         <div class="product_action">
-                                                            <a href="/cart?action=add&id=${p.getId()}&quantity=1"> <i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                                            <a href="/cart?action=add&id=${p.getId()}&quantity=1&doFrom=home"> <i class="fa fa-shopping-cart"></i> Add to cart</a>
                                                         </div>
                                                     </div>
                                                     <div class="product_content">
@@ -310,5 +310,14 @@
 
 <!-- all js here -->
 <jsp:include page="/WEB-INF/homepage/layout/js_footer.jsp"/>
+<script>
+    function handleSort(page,limit,kw,fieldorder,idCategory,scale){
+        var parts = fieldorder.split("-");
+        var sortField = parts[0];
+        var order = parts[1];
+        let url = "/product?page="+page+"&limit="+limit+"&kw="+kw+"&sortField="+sortField+"&order="+order+"&idCategory="+idCategory+"&scale="+scale;
+        window.location.assign(url);
+    }
+</script>
 </body>
 </html>

@@ -38,7 +38,7 @@ public class DashboardServlet extends HttpServlet {
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null || !user.geteRole().name().equals("ADMIN")){
-            resp.sendRedirect("/user?action=login");
+            resp.sendRedirect("/404");
             return;
         }
 

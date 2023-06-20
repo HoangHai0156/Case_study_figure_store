@@ -141,11 +141,16 @@ public class CartServlet extends HttpServlet {
     private void removeCartItem(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int idOrder = Integer.parseInt(request.getParameter("idOrder"));
         int idProduct = Integer.parseInt(request.getParameter("idProduct"));
+        String doFrom = request.getParameter("doFrom");
         orderItemService.remove(idOrder, idProduct);
         Order order = orderService.findOrderById(idOrder);
         updateOrderSubTotal(order);
 
-        response.sendRedirect("/cart");
+        if (doFrom == null){
+            response.sendRedirect("/cart");
+        }else {
+            response.sendRedirect("/");
+        }
     }
 
     private void updateProductLQuantity(List<OrderItem> orderItems) {
@@ -201,6 +206,7 @@ public class CartServlet extends HttpServlet {
     }
 
     private void addToCart(HttpServletRequest request, HttpServletResponse response, String action, HttpSession session) throws ServletException, IOException {
+        String doFrom = request.getParameter("doFrom");
         int idProduct = Integer.parseInt(request.getParameter("id"));
         Product product = productService.findProduct(idProduct);
 
@@ -280,12 +286,13 @@ public class CartServlet extends HttpServlet {
                 updateOrderSubTotal(unpaidOrder);
             }
 
-            List<OrderItem> orderItems = orderItemService.findAllByIdOrder(unpaidOrder.getId());
-            unpaidOrder.setOrderItems(orderItems);
-
-            request.setAttribute("order", unpaidOrder);
-            request.setAttribute("products", allProducts);
-            request.getRequestDispatcher(Config.HOMEPAGE + "cart.jsp").forward(request, response);
+            if (doFrom.equals("home")){
+                response.sendRedirect("/");
+            }else if (doFrom.equals("viewProduct")){
+                response.sendRedirect("/product?action=view&id="+idProduct);
+            }else {
+                response.sendRedirect("/cart");
+            }
         }
 
     }
