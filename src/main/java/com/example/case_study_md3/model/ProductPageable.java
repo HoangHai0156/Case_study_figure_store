@@ -2,7 +2,7 @@ package com.example.case_study_md3.model;
 
 public class ProductPageable {
     private int page = 1;
-    private int limit = 5;
+    private int limit = 6;
     private String kw = "";
     private String sortField = "id";
     private String order = "asc";
