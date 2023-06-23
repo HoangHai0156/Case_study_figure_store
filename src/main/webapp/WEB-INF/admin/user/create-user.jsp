@@ -42,8 +42,8 @@
                                 </div>
                             </c:if>
                             <div class="form-group mb-3">
-                                <label for="name">UserName :</label>
-                                <input name="name" class="form-control" type="name" id="name" required="">
+                                <label for="name">Full Name :</label>
+                                <input name="name" class="form-control" type="name" id="name" placeholder="Enter your full name" required="">
                             </div>
                             <div class="form-group mb-3">
                                 <label for="emailaddress">Email Address :</label>

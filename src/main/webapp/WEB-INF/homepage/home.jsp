@@ -220,7 +220,7 @@
                                                         </div>
                                                         <div class="add_links">
                                                             <ul>
-                                                                <li><a href="/cart?action=add&id=${p.getId()}" title="add to cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li>
+                                                                <li><a href="/cart?action=add&id=${p.getId()}&quantity=1&doFrom=home" title="add to cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a></li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -239,7 +239,7 @@
                             <div class="item_page">
                                 <label for="page_select">show</label>
                                 <select id="page_select" name="limit" onchange="handleChange(${requestScope.pageable.getPage()},this.value,'${requestScope.pageable.getKw()}','${requestScope.pageable.getSortField()}','${requestScope.pageable.getOrder()}',${requestScope.pageable.getIdCategory()},'${requestScope.pageable.getScale()}')">
-                                    <c:forEach var="limit" begin="1" end="10">
+                                    <c:forEach var="limit" begin="5" end="10">
                                         <option <c:if test="${limit == requestScope.pageable.getLimit()}">selected</c:if> value="${limit}">${limit}</option>
                                     </c:forEach>
                                 </select>
